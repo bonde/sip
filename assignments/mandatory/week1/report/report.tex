@@ -1,0 +1,129 @@
+\documentclass[a4paper, 10pt, final]{article}
+\usepackage{bonde}
+
+\def\mytitle{Signal and Image Processing 2010}
+\def\mysubtitle{Handin of mandatory excercise 1}
+\def\myauthor{Ulrik Bonde}
+\def\mymail{\mailto{bonde@diku.dk}}
+\def\mydate{\today}
+
+\title{\mytitle}
+\subtitle{\mysubtitle}
+
+\author{\myauthor{} - \mymail}
+\date{\mydate}
+
+\hypersetup{
+colorlinks,%
+citecolor=black,%
+filecolor=black,%
+linkcolor=black,%
+urlcolor=black,%
+bookmarksopen=false,
+pdftitle={\mytitle - \mysubtitle},
+pdfauthor={\myauthor}
+}
+
+\begin{document}
+\maketitle
+
+\subsection*{Question 1.1}
+We wish to prove that the Fourier transform of a real and even function
+is real and even. We solve the integral for the Fourier transform in
+equation (2.18) \citet[p. 44]{jahne-digital}.
+
+\begin{equation*}
+    \hat{g}(k) = \int_{-\infty}^{\infty}{g(x)\exp(-2\pi ikx)dx}
+\end{equation*}
+
+We split the integral in positive and negative parts, flip the
+boundaries of the integral and perform the substitution $x = -x$. We can
+do this substitution as we have an even function thus $g(x) = g(-x)$.
+
+\begin{align*}
+    \hat{g}(k) & = \int_{-\infty}^{0}{g(x)\exp(-2\pi ikx)dx} + \int_{0}^{\infty}{g(x)\exp(-2\pi ikx)dx}\\
+               & = \int_{0}^{\infty}{g(x)\exp(-2\pi ikx)dx} - \int_{0}^{-\infty}{g(x)\exp(-2\pi ikx)dx}\\
+               & = \int_{0}^{\infty}{g(x)\exp(-2\pi ikx)dx} + \int_{0}^{\infty}{g(-x)\exp(2\pi ikx)dx}
+\end{align*}
+
+Again we use that $g(x) = g(-x)$ and we can now integrate from
+$0$ to $\infty$.
+
+\begin{align*}
+    \hspace{0.5em} &= \int_{0}^{\infty}{g(x)\exp(-2\pi ikx)dx} + \int_{0}^{\infty}{g(x)\exp(2\pi ikx)dx}\\
+               & = \int_{0}^{\infty}{g(x)\left(\exp(-2\pi ikx) + \exp(2\pi ikx)\right)dx}
+\end{align*}
+
+By \emph{Euler's identities} we have that $\cos(\theta) =
+\frac{e^{i\theta} + e^{-i\theta}}{2}$. We set $\theta = 2\pi kx$ and
+multiply by $2$.
+
+\begin{align*}
+    \hspace{0.5em} & = 2 \int_{0}^{\infty}{g(x)\frac{\exp(-2\pi ikx) + \exp(2\pi ikx)}{2}dx}\\
+               & = 2 \int_{0}^{\infty}{g(x)\cos(2\pi kx)dx}
+\end{align*}
+
+In the resulting $\hat{g}(k) = 2 \int_{0}^{\infty}{g(x)\cos(2\pi kx)dx}$
+we have removed the imaginary part. The result is real and even because
+$\cos(x)$ is an even function.
+
+\subsection*{Question 1.2}
+First we would like to find the Fourier transform of $\delta_{x - x_0} +
+\delta_{x + x_0}$ (using the notation from \citeauthor{jahne-digital} for
+$\delta$-functions). We set $g(x) = \delta_{x - x_0} + \delta_{x + x_0}$
+and use equation (2.18) from \citeauthor{jahne-digital}.
+
+\begin{align*}
+    \hat{g}(k) & = \int_{-\infty}^{\infty}{g(x)\exp(-2\pi ikx)dx}\\
+    & = \int_{-\infty}^{\infty}{(\delta_{x - x_0} + \delta_{x + x_0})e^{-2\pi ikx}dx}\\
+    & = \int_{-\infty}^{\infty}{\delta_{x - x_0}e^{-2\pi ikx}dx +
+    \int_{-\infty}^{\infty}{\delta_{-x - x_0}e^{-2\pi ikx}dx}}\\
+\end{align*}
+Note that we have used that $x + x_0 = -x - x_0$. Now we want to substitute
+$-x$ with $x$ to change signs in the exponential function. To do this we
+have to multiply by $-1$ thus changing the sign of the integral. Also,
+the boundaries have changed, so we fix this by flipping them again.
+\begin{align*}
+    & = \int_{-\infty}^{\infty}{\delta_{x - x_0}e^{-2\pi ikx}dx - \int_{\infty}^{-\infty}{\delta_{x - x_0}e^{2\pi ikx}dx}}\\
+    & = \int_{-\infty}^{\infty}{\delta_{x - x_0}e^{-2\pi ikx}dx + \int_{-\infty}^{\infty}{\delta_{x - x_0}e^{2\pi ikx}dx}}
+\end{align*}
+When we integrate from $-\infty$ to $\infty$ there is only one point
+where $x = x_0$ which means that the exponential functions in the
+integral only contribute once. We then have that
+\begin{align*}
+    & = e^{-2\pi ikx} + e^{2\pi ikx}\\
+    & = 2 \left(\frac{e^{-2\pi ikx} + e^{2\pi ikx}}{2}\right)\\
+    & = 2 \cos(2\pi kx)
+\end{align*}
+
+By equation (2.19) from \citeauthor{jahne-digital} we have that
+\begin{align*}
+    g(x) & = \int_{-\infty}^{\infty}{\hat{g}(k)e^{2\pi ikx}dk}
+\end{align*}
+which will return the original function given the Fourier transform of
+$g(x)$. Based on the above we guess that the Fourier transform of
+$\cos(2\pi xu_0)$ is $\frac{1}{2}(\delta_{x - x_0} + \delta_{x + x_0})$.
+\begin{align*}
+    g(x) & = \int_{-\infty}^{\infty}{\frac{1}{2}(\delta_{x - x_0} +
+    \delta_{x + x_0})e^{2\pi iu_0x}du_0}\\
+    & = \frac{1}{2}\left( \int_{-\infty}^{\infty}{\delta_{x -
+    x_0}e^{2\pi iu_0x}du_0} + \int_{-\infty}^{\infty}{\delta_{x +
+    x_0}e^{2\pi iu_0x}du_0}\right)\\
+    & = \cos(2\pi xu_0)
+\end{align*}
+We derive the result in a similar manner as previously except we
+perform the substitution $u_0 = - u_0$.
+
+\subsection*{Question 1.3}
+
+\subsection*{Question 1.4}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Formal stuff
+
+\bibliographystyle{abbrvnat}
+\bibliography{bibliography}
+%\addcontentsline{toc}{chapter}{Litteratur}
+
+\end{document}
+
+% vim: set tw=72 spell spelllang=en:

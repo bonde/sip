@@ -1,0 +1,51 @@
+\ProvidesPackage{bonde}
+
+\usepackage{a4wide}
+
+\usepackage{charter}
+\usepackage{verbatim}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+%\usepackage[integrals]{wasysym}
+%\usepackage{mathrsfs}
+%\usepackage[mathcal]{euscript}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage[small,bf]{caption}
+%\usepackage{xypic}
+\usepackage[table]{xcolor}
+\usepackage{subfig}
+%\usepackage{ulem} %use \normalem after begin document
+\usepackage[authoryear]{natbib}
+
+% Settings
+\parindent=5pt
+\parskip=8pt plus 2pt minus 4pt
+\lstset{language=Matlab, basicstyle=\scriptsize,
+    showstringspaces=false, numbers=left, stepnumber=1, numberstyle=\tiny, frame=tb}
+
+% Commands
+\newcommand{\mailto}[1]{\href{mailto:#1}{#1}}
+
+% Provide \subtitle
+\makeatletter
+\def\s@btitle{\relax}
+\def\subtitle#1{\gdef\s@btitle{#1}}
+\def\@maketitle{%
+\newpage
+\null
+%\vskip -6em%
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} lr}
+    {\large \textbf \@title } \vspace{0.5em} & {\small \@date}\\
+    \if\s@btitle\relax\else\typeout{[subtitle]}%
+    \hspace{0.2em}{\s@btitle}%
+    \fi & \\
+    {\small \emph{\hspace{0.2em}by \@author}} & 
+\end{tabular*}\par\hrule
+\vskip 1.5em}
+\makeatother

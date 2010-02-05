@@ -1,0 +1,13 @@
+# The following file patterns will be ignored by git
+*.swp
+*.log
+*.out
+*.aux
+*.pdf
+*.pyc
+*.bbl
+*.blg
+*.toc
+*.lof
+*.lot
+*~
