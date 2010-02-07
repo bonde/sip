@@ -79,10 +79,11 @@ and use equation (2.18) from \citeauthor{jahne-digital}.
     & = \int_{-\infty}^{\infty}{\delta_{x - x_0}e^{-2\pi ikx}dx +
     \int_{-\infty}^{\infty}{\delta_{-x - x_0}e^{-2\pi ikx}dx}}\\
 \end{align*}
-Note that we have used that $x + x_0 = -x - x_0$. Now we want to substitute
-$-x$ with $x$ to change signs in the exponential function. To do this we
-have to multiply by $-1$ thus changing the sign of the integral. Also,
-the boundaries have changed, so we fix this by flipping them again.
+Note that we have used that $x + x_0 = -x - x_0$. In the second integral
+we want to substitute $-x$ with $x$ to change signs in the exponential
+function. To do this we have to multiply by $-1$ which changes the sign
+of the integral. Also, the boundaries are reversed. We fix this by
+changing the sign once again.
 \begin{align*}
     & = \int_{-\infty}^{\infty}{\delta_{x - x_0}e^{-2\pi ikx}dx - \int_{\infty}^{-\infty}{\delta_{x - x_0}e^{2\pi ikx}dx}}\\
     & = \int_{-\infty}^{\infty}{\delta_{x - x_0}e^{-2\pi ikx}dx + \int_{-\infty}^{\infty}{\delta_{x - x_0}e^{2\pi ikx}dx}}
@@ -112,11 +113,18 @@ $\cos(2\pi xu_0)$ is $\frac{1}{2}(\delta_{x - x_0} + \delta_{x + x_0})$.
     & = \cos(2\pi xu_0)
 \end{align*}
 We derive the result in a similar manner as previously except we
-perform the substitution $u_0 = - u_0$.
+perform the substitution $u_0 = - u_0$. We use that the second
+$\delta$-function can be written as $\delta_{x - (-x_0)}$ which then
+again only contributes once.
 
 \subsection*{Question 1.3}
+The frequency of bass signals are low while treble signals have high
+frequency.
 
 \subsection*{Question 1.4}
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Formal stuff
 
