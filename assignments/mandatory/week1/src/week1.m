@@ -197,23 +197,42 @@ function week1( ~ )
         
 
     function run( ~ )
-        filepath = '../../../../images/cmp1.gif';
+        %filepath = '../../../../images/cmp1.gif';
         %filepath = '../../../../images/idotyl.tiff';
+        filepath = '../../../../images/Lena512.png';
 
         I = imread(filepath);
+        %imwrite(I, '../report/images/cNoAdjust.png', 'png');
 
+        %imshow(I), figure;
         I = adjust(I);
+        %imwrite(I, '../report/images/cAdjust.png', 'png');
 
-        n = 8;
         %R = reduce(I, n);
-        R = reduceVar(I, n);
+        %R4 = reduceVar(I, 4);
+        %R8 = reduceVar(I, 8);
+        %R16 = reduceVar(I, 16);
+        %R32 = reduceVar(I, 32);
+        %imwrite(R4, '../report/images/cr4.png', 'png');
+        %imwrite(R8, '../report/images/cr8.png', 'png');
+        %imwrite(R16, '../report/images/cr16.png', 'png');
+        %imwrite(R32, '../report/images/cr32.png', 'png');
+        %R1 = reduceVar(adjust(I), n);
+        %imwrite(R, '../report/images/noadjust_8.png', 'png');
+        %imwrite(R1, '../report/images/adjust_8.png', 'png');
         
-        factor = 2;
-        M = factorResize(R, factor);
+        factor = 60;
+        M = factorResize(I, factor);
+        %imwrite(M, '../report/images/LenaPixel.png', 'png');
+
         %M = I(1:factor:size(M,1), 1:factor:size(M,2));
         
-        imshow(I), figure, imhist(I, 128);
-        figure, imshow(M), figure, imhist(M, n);
+        imshow(I); %figure, imshow(reduceVar(I,4));
+        figure, imshow(M);
+        %figure, imshow(R16);
+        %figure, imshow(R32);
+        %figure, imshow(R), figure, imshow(R1);
+        %figure, imshow(R), figure, imhist(R, n);
         %figure, imshow(R);
     end
 
