@@ -56,7 +56,7 @@ multiply by $2$.
 \end{align*}
 
 In the resulting $\hat{g}(k) = 2 \int_{0}^{\infty}{g(x)\cos(2\pi kx)dx}$
-we have removed the imaginary part. The result is real and even because
+we have removed the imaginary part. The result is real and even as
 $\cos(x)$ is an even function.
 
 \subsection*{Question 1.2}
@@ -137,10 +137,10 @@ resolution of an image.
 \end{figure}
 
 The approach used for reducing the number of colors in an image is very
-similar to an image histogram. Such a histogram can be been in figure
+similar to an image histogram. Such a histogram can be been in fig.
 \ref{dark_image}. Using the variable $n$ we can specify how many colors
 we want. The color range is divided into $n$ smaller ranges of $255/n$
-length. The subranges functions as bins where color values are put when
+length. The subranges function as bins where color values are put when
 we scan an image. Pixel that belong to a certain bin will all be set to
 the same value, which is the average of the boundaries of the bin.
 
@@ -150,15 +150,16 @@ bins $\left[0; 85\right[$, $\left[85; 170\right[$ and $\left[170,
 $212$ respectively.
 
 We assume that the image have values ranging from $0$ to $255$. If
-$n=3$ this causes problems with the image given in shown in figure
+$n=3$ this causes problems with the image given in shown in fig.
 \ref{dark_image} as no pixel are found in the last bin and only two
-colors will be used. This is illustrated in figure \ref{noadjust}.
+colors will be used. The problem is illustrated in fig. \ref{n8}
+with eight colors.
 
 \begin{figure}[!h]
     \centering
     \subfloat[No adjustment of colors]{\label{noadjust}\includegraphics[angle=0,width=0.33\textwidth]{images/noadjust_8}\hspace{1em}}
     \subfloat[Colors adjusted]{\label{adjust}\includegraphics[angle=0,width=0.33\textwidth]{images/adjust_8}}
-    \caption[]{The image from figure \ref{dark_image} shown with 8
+    \caption[]{The image from fig. \ref{dark_image} shown with 8
     colors. The left image have not been adjusted and is very dark.
     Less than eight colors are used to shown the image. The right image
     have had its colors adjusted to fill out the entire range. Eight
@@ -173,7 +174,7 @@ in the following manner.
     I_{m, n} =  (I_{m, n} - I_{min})\frac{R_{max} - R_{min}}{I_{max} - I_{min}} + R_{min}
 \end{equation*}
 Here $R_{min}$ and $R_{max}$ are the interval which we wish to scale to
-and $I_{min}$ and $R_{max}$ are the minimum and maximum values in the
+and $I_{min}$ and $I_{max}$ are the minimum and maximum values in the
 original image. In practice the min and max values might not be
 representative for the image. We use a 95 \% confidence interval for the
 values for min and max.
@@ -183,9 +184,9 @@ boundaries for the color. When $n$ is low these colors might not be
 representative for the image, even though the colors have been adjusted.
 A possible solution would be to find the actual mean of the colors in
 the respective bins, thus selecting a more suitable shade for a given
-pixel. In figure \ref{cr4} we might get a better shade for the computer
-tower which were more related to the actual color in figure
-\ref{cadjust}. Figure \ref{sequence_colors} shows when $n$ increases we
+pixel. In fig. \ref{cr4} we might get a better shade for the computer
+tower which were more related to the actual color in fig.
+\ref{cadjust}. Fig. \ref{sequence_colors} shows when $n$ increases we
 approximate the original colors.
 
 \begin{figure}[!h]
@@ -195,7 +196,7 @@ approximate the original colors.
     \subfloat[$n = 4$]{\label{cr4}\includegraphics[angle=0,width=0.40\textwidth]{images/cr4}\hspace{1em}}
     \subfloat[$n = 8$]{\label{cr8}\includegraphics[angle=0,width=0.40\textwidth]{images/cr8}}\\
     \subfloat[$n = 16$]{\label{cr16}\includegraphics[angle=0,width=0.40\textwidth]{images/cr16}\hspace{1em}}
-    \subfloat[$n = 32$]{\label{cr32}\includegraphics[angle=0,width=0.40\textwidth]{images/cr32}}\\
+    \subfloat[$n = 32$]{\label{cr32}\includegraphics[angle=0,width=0.40\textwidth]{images/cr32}}
     \caption[]{A sequence of increasing colors to show the same image.
     The two top images show the original image before and after the
     colors have been adjusted. We gradually increase the number of
@@ -207,27 +208,104 @@ approximate the original colors.
 \end{figure}
 
 \subsubsection*{Changing the resolution}
-To change the resolution in an image we use an integer $n$ to denote the
-size of a $n \times n$ matrix used for subsampling a group of pixels. In
-a smaller image, one pixel will represent a group of pixels in the
-original. The image is then divided in to these groups of pixels as
-shown in figure \ref{lenagrid}. The average value of this group of
-pixels is then given to each pixel in the group.
+To change the resolution in an image we use an integer $f$ to denote the
+size of a $f \times f$ matrix used for subsampling a group of pixels.
+The image in then scaled by $1/f^2$. In a smaller version of an image, one
+pixel will correspond to a group of pixels in the original.
+
+The first step of the method divides the image into these groups of
+pixels --- as shown in fig. \ref{lenagrid} --- then assigns the
+average value of this group to each pixel in the group. Finally the
+actual scaling, removing of pixels, is performed.
+
+If we were just to remove  --- say every second pixel --- we would lose
+very much information in the image. By using the average value, we get a
+more precise version of the downscaled image. The difference is shown in
+fig. \ref{sequence_scale}.
 
 \begin{figure}[!h]
     \centering
     \subfloat[Image with superimposed oversized pixels and $3\times3$
     matrices for subsampling]{\includegraphics[scale=0.3]{images/Lena_grid}}\hspace{1em}
     \subfloat[Scaled image (zoomed in)]{\includegraphics[scale=0.3]{images/LenaPixel}}
-    \caption{In the left image the smaller lines indicate pixel borders. All
-    pixels inside the subsampling matrix will be given the average
-    value. Note that the matrix size is not a multiple of the image
-    size. To the right, the rescaling have been performed. Note that the
-    image dimensions have changed to include the pixels which could not
-    fit.}
+    \caption{A very coarse rescaling. In the left image the smaller
+    lines indicate pixel borders and thick lines are the subsampling
+    matrices. All pixels inside the subsampling matrix will be given the
+    average value of that matrix.  Note that the matrix size is not a
+    multiple of the image size. To the right, the rescaling have been
+    performed. Note that the image dimensions have changed to exclude
+    the pixels which could not fit.}
     \label{lenagrid}
 \end{figure}
 
+We have to make a choice when the size of the matrix does not fit in the
+image. Calculating
+\[
+r = (width \mod f)
+\]
+we find out how many pixels that are left from a matrix that could not
+fit the image, thus
+\[
+overflow = f - r
+\]
+says how many pixels this matrix has outside the image. If the number of
+pixels we need to add to an image is less than 50 \% of $f$, then we
+will add this number of pixels to the image. If not, we simply remove
+these pixels from the image by resizing it. The same is done for the
+height of the image. We now have an image height and width that is a
+multiple of the factor $f$ and we can find the average for each of the
+subsampling matrices easily.
+
+When we have found the color for the subsampling matrices we can remove
+the extra rows and columns we have generated to get the actual
+downscaled image.
+
+When a row or column of pixels are added to the image we simply copy the
+value of the existing pixels in the row or column preceding it. Also,
+pixels are always added to the right or bottom of an image. The same is
+true for removing pixels. Therefore the bottom and right side of the
+image is not entirely true with regards to the mean. One solution to
+reduce this error is to expand the image from the center by also
+adding pixels to the top and bottom. One could also let the image wrap
+around, though this is not always desirable for photos.
+
+The resize operation gives a more precise image of the original then the
+previous reduction of colors, at least for small $n$, because we use the
+information present in the image to find the mean. Both methods could
+also find the median instead of the mean to make sure that only
+information from the original image was used.
+
+\begin{figure}[!h]
+    \centering
+    \subfloat[Original
+    (adjusted)]{\label{morg}\includegraphics[angle=0,width=0.30\textwidth]{images/morg}\hspace{1em}}
+    \subfloat[$f = 2$]{\label{m2}\includegraphics[angle=0,width=0.30\textwidth]{images/m2}}\hspace{1em}
+    \subfloat[$f = 3$]{\label{m3}\includegraphics[angle=0,width=0.30\textwidth]{images/m3}}\\
+    \subfloat[$f = 4$ (average)]{\label{m4}\includegraphics[angle=0,width=0.30\textwidth]{images/m4}}\hspace{1em}
+    \subfloat[$f = 4$ (naive)]{\label{mf}\includegraphics[angle=0,width=0.30\textwidth]{images/mf}}\hspace{1em}
+    \subfloat[$f = 5$]{\label{m5}\includegraphics[angle=0,width=0.30\textwidth]{images/m5}}\\
+    \subfloat[]{\label{sm2}\includegraphics[angle=0,scale=1.0]{images/sm2}}\hspace{1em}
+    \subfloat[]{\label{sm3}\includegraphics[angle=0,scale=1.0]{images/sm3}}\hspace{1em}
+    \subfloat[]{\label{sm4}\includegraphics[angle=0,scale=1.0]{images/sm4}}\hspace{1em}
+    \subfloat[]{\label{sm5}\includegraphics[angle=0,scale=1.0]{images/sm5}}
+    \caption[]{A sequence of increasingly downscaled images. When the
+    image is scaled down $\frac{1}{9}$ (\textbf{fig. \ref{m3}}), the
+    letters ``DIKU'' disappear.\\
+    Note the difference in \textbf{fig.  \ref{m4}} and
+    \textbf{\ref{mf}}. The first have been scaled using the average
+    value, the other have just had every fourth row/column selected.
+    Notice the sharp edges on the bottle and cup in the naive method.
+    Also, the measuring tape is garbled and it has a more grainy
+    appearance.\\
+    In \textbf{fig. \ref{m5}} we see that the textures in the image gets
+    harder to recognise. The grills on the apparatus are blurred, just
+    like the cup, the text on the paper and the measuring tape.\\
+    \textbf{Fig.  \ref{sm2}} to \textbf{\ref{sm5}} at the bottom shows
+    the actual downscaled images using the average value for pixels.
+    Note that even though the image in \textbf{fig.  \ref{m5}} was
+    blurred, the final small version still resembles the original.}
+    \label{sequence_scale}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Formal stuff

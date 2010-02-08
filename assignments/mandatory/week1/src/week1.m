@@ -187,19 +187,12 @@ function week1( ~ )
             M = im2uint8(M);
             I = M;  
         end
-    end
-
-    function I = resolution(I, scale)
-        kernel = fspecial('gaussian', [3 3], 5);
-        I = imfilter(I, kernel, 'symmetric', 'conv');
-        I = I(1:2:size(I,1), 1:2:size(I,2));
-    end
-        
+    end        
 
     function run( ~ )
         %filepath = '../../../../images/cmp1.gif';
-        %filepath = '../../../../images/idotyl.tiff';
-        filepath = '../../../../images/Lena512.png';
+        filepath = '../../../../images/idotyl.tiff';
+        %filepath = '../../../../images/Lena512.png';
 
         I = imread(filepath);
         %imwrite(I, '../report/images/cNoAdjust.png', 'png');
@@ -221,14 +214,35 @@ function week1( ~ )
         %imwrite(R, '../report/images/noadjust_8.png', 'png');
         %imwrite(R1, '../report/images/adjust_8.png', 'png');
         
-        factor = 60;
-        M = factorResize(I, factor);
-        %imwrite(M, '../report/images/LenaPixel.png', 'png');
+        %factor = 2;
+        %F = quatersize(I,2);
+        %F = quadouble(F,2);
+        %F = F(1:2:size(F,1), 1:2:size(F,2));
+        M2 = factorResize(I, 2);
+        M2 = M2(1:2:size(M2,1), 1:2:size(M2,2));
+        M3 = factorResize(I, 3);
+        M3 = M3(1:3:size(M3,1), 1:3:size(M3,2));
+        M4 = factorResize(I, 4);
+        M4 = M4(1:4:size(M4,1), 1:4:size(M4,2));
+        M5 = factorResize(I, 5);
+        M5 = M5(1:5:size(M5,1), 1:5:size(M5,2));
+
+
+%         imwrite(I, '../report/images/morg.png', 'png');
+%         imwrite(F, '../report/images/mf.png', 'png');
+         imwrite(M2, '../report/images/sm2.png', 'png');
+         imwrite(M3, '../report/images/sm3.png', 'png');
+         imwrite(M4, '../report/images/sm4.png', 'png');
+         imwrite(M5, '../report/images/sm5.png', 'png');
 
         %M = I(1:factor:size(M,1), 1:factor:size(M,2));
         
         imshow(I); %figure, imshow(reduceVar(I,4));
-        figure, imshow(M);
+        %figure, imshow(F);
+        figure, imshow(M2);
+        figure, imshow(M3);
+        figure, imshow(M4);
+        figure, imshow(M5);
         %figure, imshow(R16);
         %figure, imshow(R32);
         %figure, imshow(R), figure, imshow(R1);
