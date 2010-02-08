@@ -116,8 +116,17 @@ $\delta$-function can be written as $\delta_{x - (-x_0)}$ which then
 again only contributes once.
 
 \subsection*{Question 1.3}
-The frequency of bass signals are low while treble signals have high
-frequency.
+In the time domain a bass is a sinusoid signal with a low frequency and
+therefore large wavelength. Treble is somewhat the inverse as these
+signal have high frequency, which in turn means short wavelength.  It
+follows that a bass signal will have a large concentration of low
+frequencies, while a treble signal will have a large concentration of
+high frequencies. Thus, the two signals will be concentrated at
+different positions in the frequency domain.
+
+With regards to the Fourier transform we see that bass signals have
+small $\mathbi{k}$ and treble have large $\mathbi{k}$, as $k =
+\frac{1}{\lambda}$, where $\lambda$ is the wavelength.
 
 \subsection*{Question 1.4}
 Two MATLAB programs have been written. The program provide methods for
@@ -241,7 +250,7 @@ fig. \ref{sequence_scale}.
 We have to make a choice when the size of the matrix does not fit in the
 image. Calculating
 \[
-r = (width \mod f)
+r = width (\mod f)
 \]
 we find out how many pixels that are left from a matrix that could not
 fit the image, thus
@@ -273,7 +282,8 @@ The resize operation gives a more precise image of the original then the
 previous reduction of colors, at least for small $n$, because we use the
 information present in the image to find the mean. Both methods could
 also find the median instead of the mean to make sure that only
-information from the original image was used.
+information from the original image was used. A sequence of resized
+images are shown in fig. \ref{sequence_scale}.
 
 \begin{figure}[!h]
     \centering
@@ -290,20 +300,19 @@ information from the original image was used.
     \subfloat[]{\label{sm5}\includegraphics[angle=0,scale=1.0]{images/sm5}}
     \caption[]{A sequence of increasingly downscaled images. When the
     image is scaled down $\frac{1}{9}$ (\textbf{fig. \ref{m3}}), the
-    letters ``DIKU'' disappear.\\
-    Note the difference in \textbf{fig.  \ref{m4}} and
-    \textbf{\ref{mf}}. The first have been scaled using the average
-    value, the other have just had every fourth row/column selected.
-    Notice the sharp edges on the bottle and cup in the naive method.
-    Also, the measuring tape is garbled and it has a more grainy
-    appearance.\\
-    In \textbf{fig. \ref{m5}} we see that the textures in the image gets
-    harder to recognise. The grills on the apparatus are blurred, just
-    like the cup, the text on the paper and the measuring tape.\\
-    \textbf{Fig.  \ref{sm2}} to \textbf{\ref{sm5}} at the bottom shows
-    the actual downscaled images using the average value for pixels.
-    Note that even though the image in \textbf{fig.  \ref{m5}} was
-    blurred, the final small version still resembles the original.}
+    letters ``DIKU'' disappear. Note the difference in \textbf{fig.
+    \ref{m4}} and \textbf{\ref{mf}}. The first have been scaled using
+    the average value, the other have just had every fourth row/column
+    selected.  Notice the sharp edges on the bottle and cup in the naive
+    method.  Also, the measuring tape is garbled and it has a more
+    grainy appearance. In \textbf{fig. \ref{m5}} we see that the
+    textures in the image gets harder to recognise. The grills on the
+    apparatus are blurred, just like the cup, the text on the paper and
+    the measuring tape. \textbf{Fig.  \ref{sm2}} to \textbf{\ref{sm5}}
+    at the bottom shows the actual downscaled images using the average
+    value for pixels.  Note that even though the image in \textbf{fig.
+    \ref{m5}} was blurred, the final small version still resembles the
+    original.}
     \label{sequence_scale}
 \end{figure}
 

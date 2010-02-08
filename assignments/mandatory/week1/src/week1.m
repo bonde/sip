@@ -199,6 +199,8 @@ function week1( ~ )
 
         %imshow(I), figure;
         I = adjust(I);
+        F = fft2(I);
+        F = fftshift(F);
         %imwrite(I, '../report/images/cAdjust.png', 'png');
 
         %R = reduce(I, n);
@@ -218,31 +220,31 @@ function week1( ~ )
         %F = quatersize(I,2);
         %F = quadouble(F,2);
         %F = F(1:2:size(F,1), 1:2:size(F,2));
-        M2 = factorResize(I, 2);
-        M2 = M2(1:2:size(M2,1), 1:2:size(M2,2));
-        M3 = factorResize(I, 3);
-        M3 = M3(1:3:size(M3,1), 1:3:size(M3,2));
-        M4 = factorResize(I, 4);
-        M4 = M4(1:4:size(M4,1), 1:4:size(M4,2));
-        M5 = factorResize(I, 5);
-        M5 = M5(1:5:size(M5,1), 1:5:size(M5,2));
-
-
-%         imwrite(I, '../report/images/morg.png', 'png');
-%         imwrite(F, '../report/images/mf.png', 'png');
-         imwrite(M2, '../report/images/sm2.png', 'png');
-         imwrite(M3, '../report/images/sm3.png', 'png');
-         imwrite(M4, '../report/images/sm4.png', 'png');
-         imwrite(M5, '../report/images/sm5.png', 'png');
+%         M2 = factorResize(I, 2);
+%         M2 = M2(1:2:size(M2,1), 1:2:size(M2,2));
+%         M3 = factorResize(I, 3);
+%         M3 = M3(1:3:size(M3,1), 1:3:size(M3,2));
+%         M4 = factorResize(I, 4);
+%         M4 = M4(1:4:size(M4,1), 1:4:size(M4,2));
+%         M5 = factorResize(I, 5);
+%         M5 = M5(1:5:size(M5,1), 1:5:size(M5,2));
+% 
+% 
+% %         imwrite(I, '../report/images/morg.png', 'png');
+% %         imwrite(F, '../report/images/mf.png', 'png');
+%          imwrite(M2, '../report/images/sm2.png', 'png');
+%          imwrite(M3, '../report/images/sm3.png', 'png');
+%          imwrite(M4, '../report/images/sm4.png', 'png');
+%          imwrite(M5, '../report/images/sm5.png', 'png');
 
         %M = I(1:factor:size(M,1), 1:factor:size(M,2));
         
-        imshow(I); %figure, imshow(reduceVar(I,4));
+        imshow(log(abs(F)), []); %figure, imshow(reduceVar(I,4));
         %figure, imshow(F);
-        figure, imshow(M2);
-        figure, imshow(M3);
-        figure, imshow(M4);
-        figure, imshow(M5);
+%         figure, imshow(M2);
+%         figure, imshow(M3);
+%         figure, imshow(M4);
+%         figure, imshow(M5);
         %figure, imshow(R16);
         %figure, imshow(R32);
         %figure, imshow(R), figure, imshow(R1);
