@@ -1,4 +1,6 @@
 # The following file patterns will be ignored by git
+assignments/supplementary/*
+images/*
 *.swp
 *.log
 *.out
