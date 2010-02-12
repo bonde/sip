@@ -88,9 +88,9 @@ function week2( ~ )
     end
 
     function run( ~ )
-        g = imread('../../../../images/square.tiff');
+        g1 = imread('../../../../images/square.tiff');
         %g = imread('../../../../images/lenna.tiff');
-        %g = imread('../../../../images/noisy2.tiff');
+        g2 = imread('../../../../images/noisy2.tiff');
         
         %FgR = RecursiveFFT2(g);
         %FgR = fftshift(FgR);
@@ -98,14 +98,27 @@ function week2( ~ )
         %FgI = IterativeFFT2(g);
         %FgI = fftshift(FgI);
         
-        imshow(g);
+        figure, imshow(g1);
+        figure, imshow(g2);
         %figure, imshow(log(abs(1 + FgI)), []);
         %figure, imshow(log(abs(1 + FgR)), []);
         
         % Control
-        ff = fft2(g);
-        ff = fftshift(ff);
-        figure, imshow(log(abs(1 + ff)), []);
+        ff1 = fft2(g1);
+        ff1 = fftshift(ff1);
+        ff1 = log2(abs(1 + ff1));
+        figure, imshow(ff1, []);
+        ff2 = fft2(g2);
+        ff2 = fftshift(ff2);
+        ff2 = log2(abs(1 + ff2));
+        figure, imshow(ff2, []);
+        
+        %imwrite(g1, '../report/images/img1.png', 'png');
+        %imwrite(g2, '../report/images/img2.png', 'png');
+        
+        % Does not work properly, damn you matlab
+        %imwrite(ff1, [hot], '../report/images/fft1.png', 'png');
+        %imwrite(ff2, [hot], '../report/images/fft2.png', 'png');
     end
 
 run();
