@@ -7,6 +7,40 @@ function week2( ~ )
        W = exp((2*pi*1i*(n))/N);
     end
 
+    function G = IterativeFFT(g)
+        % This one fucks up --- it's borked
+        % It's from Cormen et al.
+        G = bitrevorder(g);
+        N = length(g);
+        for s = 1:log(N)
+            M = 2^(s);
+            Wm = exp(2*pi*1i/M);
+            for k = 1:M:N
+                W = 1;
+                for j = 0:M/2 - 1
+                    u = G(k + j);
+                    wS = W*G(k + j + M/2);
+
+                    G(k + j) = u + wS;
+                    G(k + j + M/2) = u - wS;
+                    W = W*Wm;
+                end
+            end
+        end
+    end
+
+    function F = IterativeFFT2(g)
+        [M N] = size(g);
+        F = double(g(:,:));
+
+        for u = 1:M
+            F(u,1:N) = IterativeFFT(F(u,1:N));
+        end
+        %for v = 1:N
+        %    F(1:M,v) = IterativeFFT(F(1:M,v));
+        %end
+    end
+
     function G = RecursiveFFT(g, N)
         % Recursive divide and conquer algorithm from CLRS p. 835
         %
@@ -58,16 +92,20 @@ function week2( ~ )
         %g = imread('../../../../images/lenna.tiff');
         %g = imread('../../../../images/noisy2.tiff');
         
-        Fg = RecursiveFFT2(g);
-        Fg = fftshift(Fg);
+        %FgR = RecursiveFFT2(g);
+        %FgR = fftshift(FgR);
+        
+        %FgI = IterativeFFT2(g);
+        %FgI = fftshift(FgI);
         
         imshow(g);
-        figure, imshow(log(abs(1 + Fg)), []);
+        %figure, imshow(log(abs(1 + FgI)), []);
+        %figure, imshow(log(abs(1 + FgR)), []);
         
         % Control
-        %ff = fft2(g);
-        %ff = fftshift(ff);
-        %figure, imshow(log(abs(1 + ff)), []);
+        ff = fft2(g);
+        ff = fftshift(ff);
+        figure, imshow(log(abs(1 + ff)), []);
     end
 
 run();

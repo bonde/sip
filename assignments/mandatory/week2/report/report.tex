@@ -30,16 +30,266 @@ pdfauthor={\myauthor}
 \subsection*{Question 2.1}
 
 \subsection*{Question 2.2}
+We wish to find the Fourier transform $\hat{G}_{\sigma}(k)$ of the
+gaussian distribution $G_{\sigma}(x)$.
+\begin{align}
+    \hat{G}_{\sigma}(k) & = \int_{-\infty}^{\infty}{\frac{1}{\sqrt{2\pi \sigma^{2}}}e^{-\frac{x^2}{2\sigma^2}}e^{-2\pi ikx}dx}\\
+    & = \frac{1}{\sqrt{2\pi \sigma^{2}}}\int_{-\infty}^{\infty}{e^{-(\frac{1}{2\sigma^2}x^2 + 2\pi ikx)}dx}\\
+    & = \frac{1}{\sqrt{2\pi \sigma^{2}}}\sqrt{\pi/\frac{1}{2\sigma^{2}}}e^{(2\pi ik)^2}/\frac{4}{2\sigma^2}\\
+    & = e^{-2(\pi k\sigma)^2}
+\end{align}
+A lot things is going on. First, from (3) to (4), we have used that
+\begin{equation}
+    \int_{-\infty}^{\infty}e^{-(ax^2+bx+c)} = \sqrt{\pi/a}e^{b^2 - 4ac/4a}
+\end{equation}
+where $a = \frac{1}{2\sigma^2}$, $b = 2\pi ik$ and $c = 0$. From
+(4) to (5) we rewrite some fractions. In (4) we have that
+\begin{equation}
+    \sqrt{\pi/\frac{1}{2\sigma^{2}}} =
+    \sqrt{\pi\frac{2\sigma^2}{1}} = \sqrt{2\pi\sigma^2}
+\end{equation}
+which then eliminates the first term. We also have that
+\begin{equation}
+    (2\pi ik)^2 / \frac{4}{2\sigma^2} = \frac{-8\pi^{2}k^{2}\sigma^2}{4} = -2\pi^2 k^2\sigma^2
+\end{equation}
+where we notice the change in sign because $i^2 = -1$.
+
+Just to recap, the Fourier transform of $G_{\sigma}(x)$ is
+\begin{align}
+    \hat{G}_{\sigma}(k) & = e^{-2(\pi k\sigma)^2}
+\end{align}
+
+We define 
+\begin{align}
+    h_1(x) & = G_{\sigma}(x)\cos(2\pi u_0x)\\
+    h_2(x) & = G_{\sigma}(x)\sin(2\pi u_0x)\\
+    h(x) & = h_1(x) + ih_2(x)
+\end{align}
+and we want to find the Fourier transform $\hat{h}(k)$ of $h(x)$.
+
+Now the know $\hat{G}_{\sigma}(k)$ as well as the Fourier transforms of
+both $\cos(2\pi u_0 x)$ and $\sin(2\pi u_0 x)$. The convolution theorem
+says that convolution of two functions in the Fourier domain means
+multiplication in the space domain. Therefore, instead of multiplying
+the functions and then finding the Fourier transform, we just convolve
+their Fourier transforms.
+\begin{align}
+    \hat{h}(x) & = \hat{G}_{\sigma}(k) \star \hat{h_1}(k) + i\hat{G}_{\sigma}(k) \star \hat{h_2}(k)\\
+     & = \hat{G}_{\sigma}(k) \star (\hat{h_1}(k) + i\hat{h_2}(k))\\
+     & = \hat{G}_{\sigma}(k) \star \left(\frac{\delta_{x - x_0} + \delta_{x + x_0}}{2} + i\frac{i\delta_{x - x_0} - \delta_{x + x_0}}{2}\right)\\
+     & = \hat{G}_{\sigma}(k) \star \left(\frac{\delta_{x - x_0} + \delta_{x + x_0}}{2} - \frac{\delta_{x - x_0} - \delta_{x + x_0}}{2}\right)\\
+     & = \hat{G}_{\sigma}(k) \star \delta_{x + x_0}\\
+     & = \int_{-\infty}^{\infty}{e^{-2(\pi\sigma u_0)^2}\delta_{x + u_0}du_0}\\
+     & = e^{-2(\pi\sigma u_0)^2}
+\end{align}
 
 \subsection*{Question 2.3}
+Given two continuous signals $f(x)$ and $g(x)$ we wish to find the
+convolution $f \star g$. The two signals are shown in fig.
+\ref{signals}.
+
+\begin{figure}[!h]
+    \centering
+    \subfloat[$f(x)$]{\mbox{
+    \begin{picture}(150,70)
+        \put(60, 47){$A$}
+        \put(105, 0){$1$}
+        %\put(0, 45){\circle*{3}}
+
+        {
+        \color{red}
+        \linethickness{1.6pt}
+        \put(70, 50){\line(1, 0){35}}
+        \put(0, 15){\line(1, 0){70}}
+        \put(105, 15){\line(1, 0){31}}
+        \put(70, 15){\line(0, 1){35}}
+        \put(105, 15){\line(0, 1){35}}
+        }
+
+        \put(0, 15){\vector(1, 0){140}}
+        \put(70, 15){\vector(0, 1){50}}
+
+    \end{picture}}
+    }\hspace{1em}
+    \subfloat[$g(x)$]{\mbox{
+    \begin{picture}(150,70)
+        \put(25, 47){$B$}
+        \put(105, 0){$1$}
+        \put(30, 0){$-1$}
+        %\put(0, 45){\circle*{3}}
+
+        {
+        \color{blue}
+        \linethickness{1.6pt}
+        \put(35, 50){\line(1, 0){70}}
+        \put(0, 15){\line(1, 0){35}}
+        \put(105, 15){\line(1, 0){31}}
+        \put(35, 15){\line(0, 1){35}}
+        \put(105, 15){\line(0, 1){35}}
+        }
+
+        \put(0, 15){\vector(1, 0){140}}
+        \put(70, 15){\vector(0, 1){50}}
+
+    \end{picture}}
+    }
+    \caption{Two signals}
+    \label{signals}
+\end{figure}
+
+Convolution of two continuous signals is defined as
+\begin{equation}
+    (g \star f)(x) = \int_{-\infty}^{\infty}{f(\alpha)g(x - \alpha)d\alpha}
+\end{equation}
+where we have used that convolution is commutative. The signals are only
+defined on certain intervals, thus we need to find these integration
+limits to perform convolution. We also note that $A$ and $B$ only are
+constants, thus we can replace them by $1$ and multiply later.
+
+\begin{figure}[!h]
+    \centering
+    \subfloat[$(g \star f)(x)$]{\mbox{
+    \begin{picture}(150,70)
+        \put(-5, 47){$1$}
+        \put(40, 65){$\alpha$}
+        \put(105, 0){$1$}
+        \put(30, 0){$-1$}
+        %\put(0, 45){\circle*{3}}
+
+        {
+        \color{red}
+        \linethickness{1.6pt}
+        \put(75, 50){\line(1, 0){35}}
+        \put(5, 15){\line(1, 0){70}}
+        \put(110, 15){\line(1, 0){31}}
+        %\put(70, 15){\line(0, 1){35}}
+        \put(110, 15){\line(0, 1){35}}
+        }
+
+        {
+        \color{blue}
+        \put(35, 10){\line(0, 1){45}}
+        \linethickness{1.6pt}
+        \put(0, 50){\line(1, 0){70}}
+        \put(-10, 15){\line(1, 0){10}}
+        \put(75, 15){\line(1, 0){31}}
+        \put(0, 15){\line(0, 1){35}}
+        \put(70, 15){\line(0, 1){35}}
+        }
+
+        \put(0, 15){\vector(1, 0){140}}
+        \put(70, 15){\vector(0, 1){50}}
+
+    \end{picture}}
+    }\hspace{1em}
+    \subfloat[$(g \star f)(x)$]{\mbox{
+    \begin{picture}(150,70)
+        \put(60, 47){$1$}
+        \put(145, 65){$\alpha$}
+        \put(105, 0){$1$}
+        \put(145, 0){$2$}
+        \put(30, 0){$-1$}
+        %\put(0, 45){\circle*{3}}
+
+        {
+        \color{red}
+        \linethickness{1.6pt}
+        \put(75, 50){\line(1, 0){35}}
+        \put(5, 15){\line(1, 0){70}}
+        \put(110, 15){\line(1, 0){31}}
+        \put(75, 15){\line(0, 1){35}}
+        \put(110, 15){\line(0, 1){35}}
+        }
+
+        {
+        \color{blue}
+        \put(140, 10){\line(0, 1){45}}
+        \linethickness{1.6pt}
+        \put(105, 50){\line(1, 0){70}}
+        \put(-100, 15){\line(1, 0){10}}
+        \put(175, 15){\line(1, 0){31}}
+        \put(105, 15){\line(0, 1){35}}
+        \put(175, 15){\line(0, 1){35}}
+        }
+
+        \put(0, 15){\vector(1, 0){140}}
+        \put(70, 15){\vector(0, 1){50}}
+
+    \end{picture}}
+    }
+    \caption{Convolution of two signals}
+    \label{signals_outer}
+\end{figure}
+We mirror $g(x)$ and ``slide'' it over $f(x)$ and from fig.
+\ref{signals_outer} we see that the outer limits of the integral are
+$\alpha < -1$ and $\alpha \geq 2$, as the signals do not interfere with
+each other. Thus we have
+\begin{equation}
+    \int_{-\infty}^{-1}{f(\alpha)g(x - \alpha)d\alpha} =
+    \int_{2}^{\infty}{f(\alpha)g(x - \alpha)d\alpha} = 0
+\end{equation}
+We see that if we move $g(x)$ further than $-1$ the signals overlap. We
+have a new limit $-1 \leq \alpha < 0$ and we use the convolution
+integral:
+\begin{equation}
+    AB\int_{x - 1}^{0}d\alpha = AB[\alpha]^{0}_{x - 1} = AB(-(x - 1)) =
+    AB(-x + 1)
+\end{equation}
+Next, from 0 to 1, we can move $g(x)$ all the way across $f(x)$. We have
+\begin{equation}
+    AB\int_{0}^{1}d\alpha = AB[\alpha]^{1}_{0} = AB
+\end{equation}
+When $\alpha$ passes 1 the area of the intersection get linearly
+smaller until 2, where the signal is zero for both. We integrate from
+$x$ to 2:
+\begin{equation}
+    AB\int_{x}^{2}d\alpha = AB[\alpha]^{2}_{x} = 2AB-x
+\end{equation}
+The final convolution of $f(x)$ and $g(x)$ is then defined as
+\begin{equation}
+    (g \star f)(x) =
+    \left\{ \begin{array}{l l r}
+        AB(-x + 1) & \mbox{if} & -1 \leq x < 0\\
+        AB & \mbox{if} & 0 \leq x < 1\\
+        2AB - x & \mbox{if} & 1 \leq x < 2\\
+        0 & \mbox{otherwise} & \\
+    \end{array}
+    \right.
+\end{equation}
+and the signal is shown in fig. \ref{signals_final}.
+\begin{figure}[!h]
+    \centering
+    \mbox{
+    \begin{picture}(150,70)
+        \put(45, 47){$AB$}
+        \put(135, 0){$2$}
+        \put(30, 0){$-1$}
+
+        {
+        \color{green}
+        \linethickness{1.6pt}
+        \put(70, 50){\line(1, 0){35}}
+        \put(35, 15){\line(1, 1){35}}
+        \put(105, 50){\line(1, -1){35}}
+        \put(5, 15){\line(1, 0){30}}
+        \put(140, 15){\line(1, 0){31}}
+        }
+
+        \put(0, 15){\vector(1, 0){175}}
+        \put(70, 15){\vector(0, 1){50}}
+
+    \end{picture}}
+    \caption{Signal of $(f \star g)(x)$}
+    \label{signals_final}
+\end{figure}
 
 \subsection*{Question 2.4}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Formal stuff
 
-\bibliographystyle{abbrvnat}
-\bibliography{bibliography}
+%\bibliographystyle{abbrvnat}
+%\bibliography{bibliography}
 %\addcontentsline{toc}{chapter}{Litteratur}
 
 \end{document}
