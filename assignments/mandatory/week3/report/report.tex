@@ -1,0 +1,128 @@
+\documentclass[a4paper, 10pt, final]{article}
+\usepackage{bonde}
+
+\def\mytitle{Signal and Image Processing 2010}
+\def\mysubtitle{Handin of mandatory excercise 3}
+\def\myauthor{Ulrik Bonde}
+\def\mymail{\mailto{bonde@diku.dk}}
+\def\mydate{\today}
+
+\title{\mytitle}
+\subtitle{\mysubtitle}
+
+\author{\myauthor{} - \mymail}
+\date{\mydate}
+
+\hypersetup{
+colorlinks,%
+citecolor=black,%
+filecolor=black,%
+linkcolor=black,%
+urlcolor=black,%
+bookmarksopen=false,
+pdftitle={\mytitle{} - \mysubtitle},
+pdfauthor={\myauthor}
+}
+
+\begin{document}
+\maketitle
+
+\subsection*{Question 3.1}
+
+\subsection*{Question 3.2}
+We let $M = 2^m$ and $N = 2^n$ and let $I$ be a $M \times M$ image and
+$f$ a seperable $N \times N$ filter. In the following we assume that
+$M \geq N$.
+
+The naive convolution $(f \star I)(x)$, disregarding that $f$ is separable,
+will yield $M^2N^2$ multiplications, as we for every pixel in $I$ will
+have to multiply that with every pixel in the filter. This is infeasible
+for large values of $N$ (remember that $M \geq N$).
+
+Using that $f$ is separable we can split the filter and convolute the
+rows and columns of $I$ separably. The image has $M$ rows. For each row
+in $I$ we have $M$ pixels. The filter have been reduced to a 1D filter
+of length $N$. Then for each pixel in a row we perform $N$
+multiplications. The same is true for the columns in $I$, i.e.  $M$
+columns with $M$ pixels which must be multiplied $N$ times. The total
+amount of calculations needed for convolution in the spatial domain
+$C_S$ is derived below.
+\begin{align}
+    C_S & = M(MN) + M(MN)\\
+    & = 2M^2N
+\end{align}
+
+Now we want to find the number of multiplications needed in the
+frequency domain. To do this we must Fourier transform both $I$ and
+$f$, but we should also make sure that the size of $f$ is equal to the
+size of $I$ (to do pointwise multiplication in the frequency domain). We
+pad $f$ with zeroes to match the size of $I$.
+
+The Fourier transform is separable and again we can transform a single
+row (or column) with $L\log(L)$ multiplications. The image have $M$ rows
+and each row require $M\log(M)$ multiplications. The same is true for
+the columns. The filter require the same amount. We then get a total of
+$2(2(M^2\log(M)))$ multiplications just for the Fourier transform of $I$
+and $f$. We assume that the inverse Fourier transform use the same
+amount of calculations, we also need $2(M^2\log(M))$ for transforming
+$I$ back to the spatial domain. The actual convolution in the frequency
+domain is just pointwise multiplication of $\mathcal{F}(I)$ and
+$\mathcal{F}(f)$. This is $M^2$ multiplications. The total amount of
+multiplications in the frequency domain is then:
+\begin{align}
+    C_{\mathcal{F}} & = 2(2(M^2\log(M))) + M^2 + 2(M^2\log(M))\\
+    & = 6M^2\log(M) + M^2
+\end{align}
+It should be noted that the multiplications in the frequency domain are
+complex multiplications.
+
+When should we use convolution in the frequency domain rather than in
+the spatial domain? This depends on the size of the filter. We solve the
+inequality $C_{\mathcal{F}} < C_S$.
+\begin{align}
+    C_{\mathcal{F}} & < C_S\\
+    6M^2\log(M) + M^2 & < 2M^2N\\
+    3\log(M) + \frac{1}{2} & < N
+\end{align}
+When the filter size $N$ is greater than $3\log(M) + 1/2$ then fewer
+multiplication will have to be done if we transform to the Fourier
+domain and do the convolution there.
+
+If $\mathcal{F}(f)$ is already known, we can cut away the
+multiplications for the transform of $f$, thus only requiring
+$4M^2\log(M) + M^2$ multiplications. For convolution in the frequency
+domain to be feasible we then only require that $N > 2\log(M) + 1/2$.
+
+
+In table \ref{table_sizes} we see how this affects a real image with
+$M = 512$.
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|r|c|c|}
+        \hline
+        $N$ & $C_S$ & $C_{\mathcal{F}}$ & $C_{\mathcal{F}}~'$\\\hline
+        $4$ & $2.097.152$ & $14.417.920$ & $9.699.328$\\
+        $8$ & $4.194.304$ & $14.417.920$ & $9.699.328$\\
+        $16$ & $8.388.608$ & $14.417.920$ & $9.699.328$\\
+        $32$ & $16.777.216$ & $14.417.920$ & $9.699.328$\\
+        \hline
+    \end{tabular}
+    \caption{Image with $M = 512$. When the filter size reaches $32 \times
+    32$ it is no longer feasible to do the convolution in the spatial
+    domain.}
+    \label{table_sizes}
+\end{table}
+
+\subsection*{Question 3.3}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Formal stuff
+
+\bibliographystyle{abbrvnat}
+\bibliography{bibliography}
+%\addcontentsline{toc}{chapter}{Litteratur}
+
+\end{document}
+
+% vim: set tw=72 spell spelllang=en:
