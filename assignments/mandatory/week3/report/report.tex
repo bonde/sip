@@ -28,6 +28,128 @@ pdfauthor={\myauthor}
 \maketitle
 
 \subsection*{Question 3.1}
+I have implemented a MATLAB program which creates ideal low- and
+high-pass filters. Butterworth and High-frequency emphasis filtering are
+also available, but only Butterworth filtering will be shown in the
+following.
+
+The filters work in the frequency domain which means that we first
+Fourier transform the input image, then manipulate the transformed image
+and finally do the inverse Fourier transform to see the result.
+
+The filters use that the distance from the center of a shifted Fourier
+transformed image corresponds to a frequency with low frequencies in the
+center. Since MATLAB will complain if the results have negative values,
+we use the absolute value of the results, thus eliminating values below
+zero.
+
+The ideal low-pass filter is defined as
+\begin{equation}
+    h(u, v) = \left\{ \begin{array}{l l l}
+        1 & \mbox{if} & D(u, v) < D_0\\
+        0 & \mbox{otherwise} &
+    \end{array}\right.
+\end{equation}
+where we use $D(u, v) = \sqrt{ (u - \frac{M}{2})^2 + (v - \frac{N}{2})^2 }$
+which is the distance from the center. The high-pass filter is the
+inverse. The actual filter and it's effect on the image
+\emph{square.tiff} is shown in fig. \ref{ideal}. The filters applied to
+the image \emph{unix.tiff} is shown in fig. \ref{ideal_unix}. Inspect
+the figures for further description on the filters.
+
+To avoid the ringing effect, we now apply a smoother filter. The
+Butterworth filter is defined as
+\begin{equation}
+    h(u, v) = \frac{1}{1 + \left[ D(u, v)/D_0 \right]^{2n}}
+\end{equation}
+We use $D(u, v)$ as defined above and $n = 2$.
+
+The Butterworth filter have been applied to the image \emph{unix.tiff}
+and the results are shown in fig. \ref{butter_unix}. Notice the shape of
+the filter. The circle fades out allowing some high frequencies in the
+final image by creating a smooth transition. Further description is
+found the image caption.
+
+\begin{figure}[!h]
+    \centering
+    \subfloat[Original]{\label{org_1}\includegraphics[angle=0,width=0.35\textwidth]{images/square}}\hspace{1em}
+    \subfloat[Fourier
+    transform]{\label{ft_1}\includegraphics[angle=0,width=0.35\textwidth]{images/square_f}}\\
+    \subfloat[Low-pass
+    filter]{\label{low}\includegraphics[angle=0,width=0.3\textwidth]{images/low_filter_35}}\hspace{1em}
+    \subfloat[Modified Fourier
+    transform]{\label{low_f}\includegraphics[angle=0,width=0.3\textwidth]{images/filter_f_square_low}\hspace{1em}}
+    \subfloat[Resulting
+    image]{\label{res_low}\includegraphics[angle=0,width=0.3\textwidth]{images/square_low_result}}\\
+    \subfloat[High-pass
+    filter]{\label{high}\includegraphics[angle=0,width=0.3\textwidth]{images/high_filter_35}}\hspace{1em}
+    \subfloat[Modified Fourier
+    transform]{\label{high_f}\includegraphics[angle=0,width=0.3\textwidth]{images/filter_f_square_high}\hspace{1em}}
+    \subfloat[Resulting image]{\label{res_high}\includegraphics[angle=0,width=0.3\textwidth]{images/square_high_result}}
+    \caption[]{\textbf{Top row:} The original image and its
+    corresponding Fourier transform. \textbf{Middle row:} The ideal
+    low-pass filter, the filter applied in the Fourier domain and the
+    resulting image. \textbf{Bottom row:} Same as above, but with a
+    high-pass filter. Notice the ringing effect from the ideal filters.
+    Both filters have $D_0 = 35$. The filters applied in the Fourier
+    domain is the result of pointwise multiplication of the filter and
+    the Fourier transformed image. Only pixels/frequencies with a value greater than
+    zero in the filter will be expressed in the result.}
+    \label{ideal}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \subfloat[Original]{\label{orgideal}\includegraphics[angle=0,width=0.3\textwidth]{images/unix}}\\
+    \subfloat[$D_0 = 5$]{\label{low5}\includegraphics[angle=0,width=0.3\textwidth]{images/unix_low_result_5}}\hspace{1em}
+    \subfloat[$D_0 = 15$]{\label{low15}\includegraphics[angle=0,width=0.3\textwidth]{images/unix_low_result_15}\hspace{1em}}
+    \subfloat[$D_0 = 45$]{\label{low45}\includegraphics[angle=0,width=0.3\textwidth]{images/unix_low_result_45}}\\
+    \subfloat[$D_0 =
+    5$]{\label{high5}\includegraphics[angle=0,width=0.3\textwidth]{images/unix_high_result_5}}\hspace{1em}
+    \subfloat[$D_0 =
+    15$]{\label{high15}\includegraphics[angle=0,width=0.3\textwidth]{images/unix_high_result_15}\hspace{1em}}
+    \subfloat[$D_0 =
+    45$]{\label{high45}\includegraphics[angle=0,width=0.3\textwidth]{images/unix_high_result_45}}\\
+    \caption[]{Ideal filters applied. \textbf{Middle row:} Low-pass
+    filtering.  Note that at lower cutoff-values the image is blurred.
+    \textbf{Bottom row:} High-pass filtering. Even at low cutoff-values,
+    a lot of information is lost. The take-away
+    point is that the low frequencies hold much image information. This
+    is shown by the fact that even with a low $D_0$ in high-pass
+    filtering, much image information is lost. Note the ringing effect
+    from the ideal filters.
+    }
+    \label{ideal_unix}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \subfloat[Original]{\label{orgbutter}\includegraphics[angle=0,width=0.3\textwidth]{images/unix}}\\
+    \subfloat[$D_0 =
+    5$]{\label{butter5}\includegraphics[angle=0,width=0.3\textwidth]{images/unix_butter_result_5}}\hspace{1em}
+    \subfloat[$D_0 =
+    15$]{\label{butter15}\includegraphics[angle=0,width=0.3\textwidth]{images/unix_butter_result_15}\hspace{1em}}
+    \subfloat[$D_0 =
+    45$]{\label{butter45}\includegraphics[angle=0,width=0.3\textwidth]{images/unix_butter_result_45}}\\
+    \subfloat[$D_0 =
+    5$]{\label{butterf5}\includegraphics[angle=0,width=0.3\textwidth]{images/butter_low_filter_5}}\hspace{1em}
+    \subfloat[$D_0 =
+    15$]{\label{butterf15}\includegraphics[angle=0,width=0.3\textwidth]{images/butter_low_filter_15}\hspace{1em}}
+    \subfloat[$D_0 =
+    45$]{\label{butterf45}\includegraphics[angle=0,width=0.3\textwidth]{images/butter_low_filter_45}}\\
+    \caption[]{Butterworth filters applied. \textbf{Middle row:} The
+    resulting images. Again we notice that at low cutoff-values the
+    image is blurred.
+    \textbf{Bottom row:} The actual filters. Note that these filters do
+    not cause the ringing effect. Also, the filter preserves the image
+    information better. At $D_0 = 5$ the letters ``UNIX'' are more
+    visible than the result using an ideal filter. At $D_0 = 45$ the
+    image is almost the same as the original but with a slightly higher
+    contrast.}
+    \label{butter_unix}
+\end{figure}
+
+\clearpage
 
 \subsection*{Question 3.2}
 We let $M = 2^m$ and $N = 2^n$ and let $I$ be a $M \times M$ image and
@@ -93,23 +215,31 @@ multiplications for the transform of $f$, thus only requiring
 $4M^2\log(M) + M^2$ multiplications. For convolution in the frequency
 domain to be feasible we then only require that $N > 2\log(M) + 1/2$.
 
-
-In table \ref{table_sizes} we see how this affects a real image with
-$M = 512$.
+Table \ref{table_sizes} shows when convolution in the spatial domain is
+feasible and when to switch to the frequency domain.
 \begin{table}[!h]
     \centering
-    \begin{tabular}{|c|r|c|c|}
+    \begin{tabular}{|c|c|}
         \hline
-        $N$ & $C_S$ & $C_{\mathcal{F}}$ & $C_{\mathcal{F}}~'$\\\hline
-        $4$ & $2.097.152$ & $14.417.920$ & $9.699.328$\\
-        $8$ & $4.194.304$ & $14.417.920$ & $9.699.328$\\
-        $16$ & $8.388.608$ & $14.417.920$ & $9.699.328$\\
-        $32$ & $16.777.216$ & $14.417.920$ & $9.699.328$\\
+        $M$ & Max $N$\\\hline
+        $4$ & $4$ \\
+        $8$ & $8$\\
+        $16$ & $8$\\
+        $32$ & $8$\\
+        $64$ & $16$\\
+        $128$ & $16$\\
+        $256$ & $16$\\
+        $512$ & $16$\\
+        $1024$ & $16$\\
+        $2048$ & $32$\\
+        $4096$ & $32$\\
         \hline
     \end{tabular}
-    \caption{Image with $M = 512$. When the filter size reaches $32 \times
-    32$ it is no longer feasible to do the convolution in the spatial
-    domain.}
+    \caption{Maximal filter size ($N \times N$) in
+    an $M \times M$ image for feasible convolution in
+    the spatial domain. If the filter is larger for a given $M$, less
+    multiplications would be used in the frequency domain. For
+    $M \geq 2048$ the max size for $N$ remains constant.}
     \label{table_sizes}
 \end{table}
 

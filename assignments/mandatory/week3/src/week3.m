@@ -126,17 +126,21 @@ function week3( ~ )
         end
         
         % Inspect the filter
-        figure, imshow(h, []);
+        %figure, imshow(h, []);
+        
+        % Save the filter to disk
+        imwrite(h, ['../report/images/' method '_' band '_filter_' num2str(d0) '.png'], 'png');
         
         % Transform image
         F = fft2(I);
         F = fftshift(F);
+        %ftshow(F);
         
         % Pointwise multiplication with the filter        
         G = h.*F;
         
         % Inspect result (Fourier)
-        figure, imshow(log(abs(G)), []);
+        %ftshow(G);
         
         % Reverse transform to spatial
         G = abs(ifft2(fftshift(G)));
@@ -230,19 +234,51 @@ function week3( ~ )
         C = 4*(M^2)*log2(M)+(M^2);
     end
 
+    function FindCosts(M)
+        for N = [4 8 16 32]
+            s = CostSpatial(M, N)
+            f = CostFrequency(M)
+        end
+    end
+
+    function MinFilterSize( ~ )
+        max = 12;
+        miD = zeros(1, max);
+        miC = zeros(1, max);
+        Ms = zeros(1, max);
+        for m = 1:max
+            Ms(m) = 2^m;
+            miD(m) = 2^(floor(log2(3*log2(2^m) + 0.5)));
+            miC(m) = 3*m + 0.5;
+        end
+        close all;
+        figure;
+        stairs(Ms, miD);
+        figure;
+        plot(Ms, miC);
+    end
+
     function run( ~ )
         %g1 = imread('../../../../images/lenna.tiff');
-        g1 = imread('../../../../images/noisy.tiff');
-        g1 = imread('../../../../images/berlinger.tiff');
+        %g1 = imread('../../../../images/noisy.tiff');
+        %g1 = imread('../../../../images/berlinger.tiff');
         %g1 = imread('../../../../images/square.tiff');
-        %g1 = imread('../../../../images/unix.tiff');
+        g1 = imread('../../../../images/unix.tiff');
+        %imwrite(g1, '../report/images/unix.png', 'png');
         imshow(g1, []);
         
-        Repair(g1);
+        %Repair(g1);
         
-        %H = BoxFilter(g1, 1);
-        %H = FilterImage(g1, 50, 'low', 'butter');
-        %figure, imshow(H, []);
+        %FindCosts(1024);
+        
+        %MinFilterSize();
+        
+        G1 = FilterImage(g1, 45, 'low', 'butter');
+        %G2 = FilterImage(g1, 45, 'high', 'ideal');
+        %imwrite(G1, [gray], '../report/images/unix_butter_result_45.png', 'png');
+        %imwrite(G2, [gray], '../report/images/unix_high_result_45.png', 'png');
+        figure, imshow(G1, []);
+        %figure, imshow(G2, []);
     end
 
 run();
