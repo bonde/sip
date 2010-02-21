@@ -244,13 +244,72 @@ feasible and when to switch to the frequency domain.
 \end{table}
 
 \subsection*{Question 3.3}
+Two images have been handed out which have been corrupted by some
+systematic interference and some random noise.
 
+We first inspect the image \emph{noisy.tiff} shown in fig.
+\ref{orgnoisy}. By inspecting the Fourier transform of the image (fig.
+\ref{noisyfft}) we find the frequencies of the systematic pattern. They
+can be seen as two ``stars'' in the diagonal. We would like to remove
+these frequencies such that the interference do not show in the image.
+For this we construct a very simple filter shown in fig.
+\ref{noisymask}.
+
+The result, where just the systematic interference have been removed can
+be seen in fig. \ref{noisyinter}, but the image is still very noisy. We
+apply a low-pass filter using a Butterworth filter with $D_0 = 65$ which
+produce a pretty good result.
+
+Other techniques have been tried to remove the remaining noise, such as
+a median filter, but the low-pass filter yields the best visual result.
+
+\begin{figure}[!h]
+    \centering
+    \subfloat[Original]{\label{orgnoisy}\includegraphics[angle=0,width=0.3\textwidth]{images/noisy}}\hspace{1em}
+    \subfloat[Fourier transform]{\label{noisyfft}\includegraphics[angle=0,width=0.3\textwidth]{images/noisy_fft}}\hspace{1em}
+    \subfloat[Mask]{\label{noisymask}\fbox{\includegraphics[angle=0,width=0.3\textwidth]{images/noisy_mask}}}\\
+    \subfloat[Removed systematic interference pattern.]{\label{noisyinter}\includegraphics[angle=0,width=0.3\textwidth]{images/noisy_inter}}\hspace{1em}
+    \subfloat[Butterworth filtering with $D_0 = 65$.]{\label{noisefinal}\includegraphics[angle=0,width=0.3\textwidth]{images/noisy_final}}
+    \caption[]{
+    Repair of the image \emph{noisy.tiff}.
+    }
+    \label{noisy}
+\end{figure}
+
+The second image is shown in fig. \ref{orgberlinger}. It's Fourier
+transform in fig. \ref{berlingerfft} hints that two systematic
+interference patterns corrupting the image (as we have two sets of
+``stars''). Removing the large stars, those furthest from the center of
+highest frequency, make no real difference in the image, but removing
+those closest to the center removes the systematic interference (see
+fig. \ref{berlingerinter}). While the systematic noise have been removed
+the image is still noisy. Much like the previous image we use the
+Butterworth filter to even out the noise. This lowers the contrast and
+we also need to adjust the colors of the image. The final image in fig.
+\ref{berlingerfinal} is a bit blurry, but much better than the original
+image.
+
+\begin{figure}[!h]
+    \centering
+    \subfloat[Original]{\label{orgberlinger}\includegraphics[angle=0,width=0.3\textwidth]{images/berlinger}}\hspace{1em}
+    \subfloat[Fourier
+    transform]{\label{berlingerfft}\includegraphics[angle=0,width=0.3\textwidth]{images/berlinger_fft}}\hspace{1em}
+    \subfloat[Mask]{\label{berlingermask}\fbox{\includegraphics[angle=0,width=0.3\textwidth]{images/berlinger_mask}}}\\
+    \subfloat[Removed systematic interference
+    pattern.]{\label{berlingerinter}\includegraphics[angle=0,width=0.3\textwidth]{images/berlinger_inter}}\hspace{1em}
+    \subfloat[Butterworth filtering with $D_0 =
+    100$ and color adjustment.]{\label{berlingerfinal}\includegraphics[angle=0,width=0.3\textwidth]{images/berlinger_final}}
+    \caption[]{
+    Repair of the image \emph{berlinger.tiff}.
+    }
+    \label{berlinger}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Formal stuff
 
-\bibliographystyle{abbrvnat}
-\bibliography{bibliography}
+%\bibliographystyle{abbrvnat}
+%\bibliography{bibliography}
 %\addcontentsline{toc}{chapter}{Litteratur}
 
 \end{document}

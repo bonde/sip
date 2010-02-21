@@ -3,6 +3,35 @@ function week3( ~ )
 %   Mandatory assignment for Signal Image Processing
 %   May include some supplementary assignments as well.
 
+    function M = adjust(I)
+        % Supplementary assignment 1.3
+
+        % Rather use a confidence interval
+        % The mean would have been acceptable also
+        confidence = [0.05; 0.95];
+        img_min = quantile(quantile(I, confidence(1)), confidence(1));
+        img_max = quantile(quantile(I, confidence(2)), confidence(2));
+
+        % Target interval
+        my_min = 0;
+        my_max = 255;
+
+        % Init the scale
+        scale = (my_max - my_min) / double((img_max - img_min));
+
+        % Init target image
+        M = zeros(size(I));
+
+        % Very clever notation instead of a for-loop
+        % For every pixel in original we subtract the image minimum, then
+        % multiply by the calculated scale. Finally add our interval min.
+        M(:,:) = ((I(:,:) - img_min) * scale + my_min);
+
+        % Make sure that matlab see this as an image
+        M = mat2gray(M);
+        M = im2uint8(M);
+    end
+
     function G = AddBorder(I, n)
         % Add a black border to an image
         G = zeros(size(I,1) + 2*n, size(I,2) + 2*n);
@@ -108,8 +137,8 @@ function week3( ~ )
             n = 2;
             h = MakeButterworthFilter(I, d0, n);
         elseif strcmp(method, 'emphasis')
-            alpha = 2;
-            beta = 70;
+            alpha = 40;
+            beta = 2;
             h = MakeHighFrequencyEmphasisFilter(I, d0, alpha, beta);
         else
             % Fail is fail
@@ -129,7 +158,7 @@ function week3( ~ )
         %figure, imshow(h, []);
         
         % Save the filter to disk
-        imwrite(h, ['../report/images/' method '_' band '_filter_' num2str(d0) '.png'], 'png');
+        %imwrite(h, ['../report/images/' method '_' band '_filter_' num2str(d0) '.png'], 'png');
         
         % Transform image
         F = fft2(I);
@@ -199,24 +228,43 @@ function week3( ~ )
        F = fft2(I);
        F = fftshift(F);
        
-       ftshow(F);
+       % Create mask
+       h = ones(size(F));
        
+       ftshow(F);
+              
        % Remove noise in noisy.tiff
-       %F(55:70, 160:180) = 0;
-       %F(180:200, 70:90) = 0;
+       %h(55:70, 160:180) = 0;
+       %h(180:200, 70:90) = 0;
        
        % Remove noise in berlinger.tiff
-       F(370:395, 10:70) = 0;
-       F(370:395, 260:290) = 0;
-       F(120:135, 220:260) = 0;
-       F(115:135, 470:500) = 0;      
+       h(370:395, 10:70) = 0;
+       h(370:395, 260:290) = 0;
+       h(120:135, 220:260) = 0;
+       h(115:135, 470:500) = 0;
+       
+       % Inspect mask
+       figure, imshow(h, []);
+       imwrite(h, '../report/images/berlinger_mask.png', 'png');
 
+       % Multiply mask and Fourier transform
+       F = h.*F;
        
        ftshow(F);
        G = abs(ifft2(fftshift(F)));
        
+       % Save intermediate image
+       imwrite(G, [gray], '../report/images/berlinger_inter.png', 'png');
+       
+       % Repair noisy.tiff
+       %G = FilterImage(G, 65, 'low', 'butter');
+       
        % Repair berlinger.tiff
+       G = adjust(G);
        G = FilterImage(G, 100, 'low', 'butter');
+       
+       % Save result
+       imwrite(G, [gray], '../report/images/berlinger_final.png', 'png');
        
        figure, imshow(G, []);
        
@@ -261,26 +309,27 @@ function week3( ~ )
     function run( ~ )
         %g1 = imread('../../../../images/lenna.tiff');
         %g1 = imread('../../../../images/noisy.tiff');
-        %g1 = imread('../../../../images/berlinger.tiff');
+        g1 = imread('../../../../images/berlinger.tiff');
         %g1 = imread('../../../../images/square.tiff');
-        g1 = imread('../../../../images/unix.tiff');
-        %imwrite(g1, '../report/images/unix.png', 'png');
+        %g1 = imread('../../../../images/unix.tiff');
+        imwrite(g1, '../report/images/berlinger.png', 'png');
         imshow(g1, []);
         
-        %Repair(g1);
+        Repair(g1);
         
         %FindCosts(1024);
         
         %MinFilterSize();
         
-        G1 = FilterImage(g1, 45, 'low', 'butter');
+        %G1 = FilterImage(g1, 45, 'low', 'butter');
         %G2 = FilterImage(g1, 45, 'high', 'ideal');
         %imwrite(G1, [gray], '../report/images/unix_butter_result_45.png', 'png');
         %imwrite(G2, [gray], '../report/images/unix_high_result_45.png', 'png');
-        figure, imshow(G1, []);
+        %figure, imshow(G1, []);
         %figure, imshow(G2, []);
     end
 
+close all;
 run();
 
 end
