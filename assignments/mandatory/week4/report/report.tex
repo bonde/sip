@@ -52,9 +52,9 @@ Laplacian pyramid is constructed from the Gaussian pyramid.
 \end{equation}
 For implementing the Gaussian pyramid we need some auxiliary methods for
 convolving an image with a gaussian kernel and downsampling. Both
-methods are implemented in the frequency domain. For convolution we just
+methods are implemented in the frequency domain. For convolution I
 use pointwise multiplication with a gaussian kernel and for downsampling
-we crop the image in the frequency domain. The methods are shown in
+I crop the image in the frequency domain. The methods are shown in
 listings \ref{gauss_matlab} and \ref{sample_matlab}. In the latter
 upsampling are also included as we need that for building the Laplacian
 pyramid.
