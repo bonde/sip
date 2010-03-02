@@ -79,6 +79,7 @@ function week4( ~ )
        % We expect that the image have been blurred
        F = fftshift(fft2(I));
 
+       % Check if we are one-dimensional
        if size(I, 1) ~= 1
            offM = size(I,1)/4;
        else
@@ -91,7 +92,10 @@ function week4( ~ )
            offN = 0;
        end
 
-       F = F(offM + 1:size(I,1) - offM, offN + 1:size(I,2) - offN);
+       % Lols, this work too, dumbass
+       F = F(offM + 1:3*offM, offN + 1:3*offN);
+       %F = F(offM + 1:size(I,1) - offM, offN + 1:size(I,2) - offN);
+
        G = abs(ifft2(F));
     end
 
@@ -147,10 +151,12 @@ function week4( ~ )
         %g1 = imread('../../../../images/berlinger.tiff');
         %g1 = imread('../../../../images/square.tiff');
         %g1 = imread('../../../../images/unix.tiff');
-        
+
         sigma = 4;
         levels = 6;
         % Write something
+        i = Downsample(g1);
+        figure, imshow(i, [])
     end
 
 % PART 2
@@ -165,8 +171,7 @@ function week4( ~ )
         I = zeros(levels, length(S));
         I(1,:) = S;
         for sigma = 1:levels - 1
-            %I(sigma + 1, :) = Gauss(S, sigma);
-            I(sigma + 1, :) = Gauss(I(sigma,:), sigma);
+            I(sigma + 1, :) = Gauss(S, sigma);
         end
     end
 
@@ -174,14 +179,30 @@ function week4( ~ )
         I = zeros(levels, length(S));
         I(1,:) = S;
         for sigma = 1:levels - 1
-            I(sigma + 1, :) = Gauss(S, sigma);
+            I(sigma + 1, :) = Gauss(S, 2^(sigma - 1));
         end
     end
 
-    function peaks = FindMaxPyr(PYR)
-        peaks = zeros(length(PYR), 2);
-        for i = 1:length(PYR)
-            [peaks(i, 1) peaks(i, 2)] = max(PYR{i, 1});
+    function e = DetectDiff(S)
+        e = zeros(size(S));
+        for n = 2:size(S,2)
+            e(n - 1) = S(n) - S(n - 1);
+        end
+
+    end
+
+    function C = ZeroCrossings(S)
+        prevsign = 0;
+        C = 0;
+
+        for n = 1:length(S)
+            thissign = sign(S(n));
+            if (thissign * prevsign) == -1
+                C = C + 1;
+            end
+            if thissign ~= 0
+                prevsign = thissign;
+            end
         end
     end
 
@@ -190,13 +211,28 @@ function week4( ~ )
         S = adjust(S);
         s1 = ScalesOfSignal(S, length(S));
         s2 = AltScalesOfSignal(S, length(S));
+
+        figure('Position', [1 1 600 800]);
+        for i = 1:6
+            subplot(3, 2, i);
+            plot(s1(i, :));
+            axis([0 70 0 260])
+        end
+
+        figure('Position', [1 1 600 800]);
+        for i = 1:6
+            %edges = DetectDiff(s1(i, :));
+            edges = s1(i,:) - s1(i + 1, :);
+            %ZeroCrossings(edges)
+
+            subplot(3, 2, i);
+            hold on;
+            plot(edges);
+            hold off;
+        end
+
         figure, imshow(s1, []);
         figure, imshow(s2, []);
-
-        %figure('Position', [1 1 600 800]);
-        %for i = 1:6
-        %    subplot(3, 2, i), plot(s(i, :));
-        %end
     end
 
 close all;

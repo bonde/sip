@@ -213,10 +213,10 @@ level of that pyramid is the original image.
     end
 \end{lstlisting}
 
-Using this scheme I am able to reconstruct the original image entirely
-(see fig. \ref{comparison}).  This changes if I were to use a different
-method for up- and downsampling the image, i.e. scaling in the spatial
-domain using MATLAB's built-in \texttt{imresize()}.
+Using this scheme I am able to do a pretty good reconstruction of the
+original image (see fig. \ref{comparison}).  This changes if I were to
+use a different method for up- and downsampling the image, i.e. scaling
+in the spatial domain using MATLAB's built-in \texttt{imresize()}.
 
 \begin{figure}[!h]
     \centering
@@ -346,6 +346,56 @@ at different scales, i.e. this is just the same as the equation given in
 reconstructed using the previous method for reconstruction.
 
 \subsection*{Question 4.2}
+Given a noisy signal we want to find maxima at all levels. We are
+going to treat the signal as an image signal, thus we first scale the
+signal to the interval $(0, 255)$.
+
+We then generate the actual scale spaces using the Gaussian kernel from
+the above assignment (see listing \ref{gauss_matlab}) with increasing
+values for $\sigma$. By incrementing $\sigma$ to 63 we get the image
+shown in fig. \ref{signal_image}. In fig. \ref{signal_plots} the
+original signal is plotted along with the scaled signals for
+$\sigma$-values from 1 to 5.
+
+By inspecting the plots in fig. \ref{signal_plots} we see that
+We now subtract neighbouring pixels to find maxima in the signal. Plots
+are shown in fig. \ref{edges_plots}.
+
+We see that the signal approximates the Gaussian distribution when
+$\sigma$ is increased.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[angle=0,width=0.45\textwidth]{images/signal_image}
+    \caption{Image constructed from linearly increasing values for
+    $\sigma$ to 63. The top row in the image is the original signal.}
+    \label{signal_image}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[angle=0,width=0.95\textwidth]{images/scale_signal}
+    \caption{Plots of the scaled signal. In the top left corner the
+    original signal is shown. Values for $\sigma$ increase from left to
+    right. Bottom right have $\sigma = 5$. Note that at $\sigma = 3$ the
+    two peaks in the start of the signal have been merged into one.
+    Also, just as the image in \textbf{fig. \ref{signal_image}} shows,
+    the intensity of the peaks in the signal decrease.}
+    \label{signal_plots}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[angle=0,width=0.95\textwidth]{images/scale_zero_cross}
+    \caption{Subtraction of neighbouring pixels.
+    Each plot corresponds to a plot in \textbf{fig. \ref{signal_plots}}.
+    At coarse scales we see that we have smooth wide curves indicating
+    that we have lost precision, i.e. we detect a change in the signal,
+    but we do not know exactly where it is. Finally, one should note the
+    changing scales on the y-axis. At coarse resolution we only have a
+    small indication of changes in the signal.}
+    \label{edges_plots}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Formal stuff
