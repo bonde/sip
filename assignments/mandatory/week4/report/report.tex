@@ -344,6 +344,7 @@ Laplacian pyramid actually \emph{is} the subtraction of two Gaussians
 at different scales, i.e. this is just the same as the equation given in
 \citep[exercise 5.3]{jahne-digital}. I have implemented this and
 reconstructed using the previous method for reconstruction.
+\clearpage
 
 \subsection*{Question 4.2}
 Given a noisy signal we want to find maxima at all levels. We are
@@ -353,16 +354,7 @@ signal to the interval $(0, 255)$.
 We then generate the actual scale spaces using the Gaussian kernel from
 the above assignment (see listing \ref{gauss_matlab}) with increasing
 values for $\sigma$. By incrementing $\sigma$ to 63 we get the image
-shown in fig. \ref{signal_image}. In fig. \ref{signal_plots} the
-original signal is plotted along with the scaled signals for
-$\sigma$-values from 1 to 5.
-
-By inspecting the plots in fig. \ref{signal_plots} we see that
-We now subtract neighbouring pixels to find maxima in the signal. Plots
-are shown in fig. \ref{edges_plots}.
-
-We see that the signal approximates the Gaussian distribution when
-$\sigma$ is increased.
+shown in fig. \ref{signal_image}.
 
 \begin{figure}[!h]
     \centering
@@ -372,6 +364,14 @@ $\sigma$ is increased.
     \label{signal_image}
 \end{figure}
 
+In fig. \ref{signal_plots} the original signal is plotted along with the
+scaled signals for $\sigma$-values from 1 to 5.  By inspecting the plots
+in fig. \ref{signal_plots} we see that the signal is rather quickly
+drowned by the Gaussian kernel. Already at $\sigma = 2$ the two peaks at
+the start of the signal have been merged into one. Also, the position of
+the maxima shift as $\sigma$ increase.  Finally note that the signal
+approximates the Gaussian distribution when $\sigma$ is increased.
+
 \begin{figure}[!h]
     \centering
     \includegraphics[angle=0,width=0.95\textwidth]{images/scale_signal}
@@ -380,22 +380,46 @@ $\sigma$ is increased.
     right. Bottom right have $\sigma = 5$. Note that at $\sigma = 3$ the
     two peaks in the start of the signal have been merged into one.
     Also, just as the image in \textbf{fig. \ref{signal_image}} shows,
-    the intensity of the peaks in the signal decrease.}
+    the intensity of the peaks in the signal decrease. Red crosses
+    indicate found maxima.}
     \label{signal_plots}
 \end{figure}
+
+We now subtract neighbouring pixels and plot the result in fig.
+\ref{edges_plots}. At the zero crossings we have some extreme in the
+original signal. Using this we can find the maxima in the signal by only
+selecting those with positive value. The found maxima is shown as red
+crosses in fig. \ref{signal_plots}.
 
 \begin{figure}[!h]
     \centering
     \includegraphics[angle=0,width=0.95\textwidth]{images/scale_zero_cross}
-    \caption{Subtraction of neighbouring pixels.
-    Each plot corresponds to a plot in \textbf{fig. \ref{signal_plots}}.
-    At coarse scales we see that we have smooth wide curves indicating
-    that we have lost precision, i.e. we detect a change in the signal,
-    but we do not know exactly where it is. Finally, one should note the
+    \caption{Subtraction of neighbouring pixels (first derivative). Each
+    plot corresponds to a plot in \textbf{fig. \ref{signal_plots}}.  At
+    coarse scales we see that we have smooth wide curves indicating that
+    we have lost precision, i.e. we detect a change in the signal, but
+    we do not know exactly where it is. Finally, one should note the
     changing scales on the y-axis. At coarse resolution we only have a
     small indication of changes in the signal.}
     \label{edges_plots}
 \end{figure}
+
+For the given signal, we can detect the original maxima (two peaks at
+the start) at $\sigma = 2$, but at coarser scales these merge
+completely. With no scaling we can still detect the maxima, but the
+jagged tops of the peaks are also considered maxima, i.e. too many
+maxima are detected. Scaling with $\sigma = 1$ seems to be the best for
+detection as we only have one maxima per peak.
+
+As already mentioned, when we convolve with the Gaussian kernel the
+extremes are shifted. This means that even at $\sigma = 1$ the
+localisation is suboptimal. We get the best result for localisation with
+no scaling.
+
+It is possible to combine high detection and localisation ability by
+using ansiotropic diffusion, i.e. using different scales (different
+value for $\sigma$) at different positions in the signal. This will
+preserve detail and remove noise where needed.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Formal stuff

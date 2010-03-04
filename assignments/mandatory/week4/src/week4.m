@@ -161,12 +161,14 @@ function week4( ~ )
 
 % PART 2
 
+    % Constructs the random signal
     function S = ConstructSignal( ~ )
         N = 64;
         S = [zeros(1,20),ones(1,3),zeros(1,2),ones(1,5)];
         S = [S,zeros(1,N-length(S))] + 0.1*randn(1,N);
     end
 
+    % Scale the signal to a certain amount of levels
     function I = ScalesOfSignal(S, levels)
         I = zeros(levels, length(S));
         I(1,:) = S;
@@ -175,6 +177,7 @@ function week4( ~ )
         end
     end
 
+    % Same as above, but in steps of exponentials of two
     function I = AltScalesOfSignal(S, levels)
         I = zeros(levels, length(S));
         I(1,:) = S;
@@ -183,15 +186,42 @@ function week4( ~ )
         end
     end
 
+    % "Pixelwise" differerence
     function e = DetectDiff(S)
         e = zeros(size(S));
-        for n = 2:size(S,2)
-            e(n - 1) = S(n) - S(n - 1);
+        for n = 1:size(S,2) - 1
+            e(n) = S(n) - S(n + 1);
         end
 
     end
 
-    function C = ZeroCrossings(S)
+    function C = CountPositive(S)
+        C = 0;
+        for i = 1:length(S)
+            if sign(S(i)) > 0
+                C = C + 1;
+            end
+        end
+    end
+
+    % Remove zero values in a pair of vals and locations
+    function [nVals nLocs] = PruneZeroes(vals, locs)
+        nVals = zeros(CountPositive(vals), 1);
+        nLocs = zeros(size(nVals));
+
+        j = 1;
+        for i = 1:length(vals)
+            if sign(vals(i)) == 1
+                nVals(j) = vals(i);
+                nLocs(j) = locs(i);
+                j = j + 1;
+            end
+        end
+
+    end
+
+    % Returns the number and location of zero crossings in a signal
+    function [C locs] = ZeroCrossings(S)
         prevsign = 0;
         C = 0;
 
@@ -199,6 +229,7 @@ function week4( ~ )
             thissign = sign(S(n));
             if (thissign * prevsign) == -1
                 C = C + 1;
+                locs(C) = n;
             end
             if thissign ~= 0
                 prevsign = thissign;
@@ -206,33 +237,67 @@ function week4( ~ )
         end
     end
 
+    % Main
     function part2( ~ )
         S = ConstructSignal();
         S = adjust(S);
+
         s1 = ScalesOfSignal(S, length(S));
-        s2 = AltScalesOfSignal(S, length(S));
+        %s2 = AltScalesOfSignal(S, length(S));
 
         figure('Position', [1 1 600 800]);
         for i = 1:6
-            subplot(3, 2, i);
-            plot(s1(i, :));
-            axis([0 70 0 260])
-        end
+            FDev = DetectDiff(s1(i, :));
+            SDev = DetectDiff(FDev);
 
-        figure('Position', [1 1 600 800]);
-        for i = 1:6
-            %edges = DetectDiff(s1(i, :));
-            edges = s1(i,:) - s1(i + 1, :);
-            %ZeroCrossings(edges)
+            [C locs] = ZeroCrossings(FDev);
+            vals = zeros(size(locs));
 
             subplot(3, 2, i);
             hold on;
-            plot(edges);
+            for j = 1:length(locs)
+                tmp = s1(i, :);
+                next = s1(i + 1, :);
+                if sign(FDev(locs(j))) == 1
+                    vals(j) = tmp(locs(j));
+                end
+            end
+
+            [vals locs] = PruneZeroes(vals, locs);
+
+            subplot(3, 2, i);
+            plot(s1(i, :));
+            plot(locs,vals,'x', 'Color', 'red');
+            axis([0 70 0 260])
+
             hold off;
         end
 
-        figure, imshow(s1, []);
-        figure, imshow(s2, []);
+        figure('Position', [1 1 600 800]);
+        for i = 1:6
+
+            FDev = DetectDiff(s1(i, :));
+            SDev = DetectDiff(FDev);
+
+            [C locs] = ZeroCrossings(SDev);
+            vals = zeros(size(locs));
+
+            subplot(3, 2, i);
+            hold on;
+            % Plot second derivate
+            %plot(SDev,'Color', [1 0.7 0.7]);
+            plot(FDev);
+            for j = 1:length(locs)
+                vals(j) = FDev(locs(j));
+            end
+            %scatter(locs,vals,'x');
+            xlim([0 70])
+
+            hold off;
+        end
+
+        %figure, imshow(s1, []);
+        %figure, imshow(s2, []);
     end
 
 close all;
