@@ -1,4 +1,21 @@
 function D = ImDerivative(I, derivative, varargin)
+% Methods for finding derivatives in images/signals
+% using the definitions from JÄhne p. 340 and 345
+% i.e.
+% Approximations for first derivatives:
+%       -D_x  = g(x1, x2) - g(x1 - delta, x2)/delta                 [1. -1]
+%       +D_x  = g(x1 + delta, x2) - g(x1, x2)/delta                 [1 -1.]
+%        D2_x = g(x1 + delta, x2) - g(x1 - delta, x2)/2*delta       1/2 [1 0 -1]
+%
+% Second derivative:
+%       D^2_x = -D_x +D_x      =       [1. -1] \star [1 -1.]    =   -D_x(+D_x(g)) = [1 -2  1]
+%
+% The Laplacian is then
+%       L = D^2_x + D^2_y
+% with filter mask
+%                   [ 1 ]      [ 0  1  0 ]
+% L = [1 -2 1 ]  +  [-2 ]   =  [ 1 -4  1 ]
+%                   [ 1 ]      [ 0  1  0 ]
 
     function DiffMethod = SetMethod(method)
         if strcmp(method, 'b')
@@ -14,7 +31,6 @@ function D = ImDerivative(I, derivative, varargin)
             error('Specify a method.');
             return
         end
-
     end
 
 if nargin == 2
@@ -38,23 +54,32 @@ end
 D = zeros(size(I));
 
 if strcmp(derivative, 'dx')
-    % Order-derivative in the x-direction
-    for i = 1:order
+    if order == 1
         for m = 1:M
             D(m, :) = DiffMethod(I(m, :));
         end
-        I = zeros(size(I));
-        I(:,:) = D(:,:);
+    elseif order == 2
+        for m = 1:M
+            forw = ForwardDiff(I(m, :));
+            D(m, :) = BackwardDiff(forw);
+        end
+    else
+        error('Not implemented. Only 1st and 2nd order derivatives.');
     end
     return
 elseif strcmp(derivative, 'dy')
-    % Order-derivative in the y-direction
-    for i = 1:order
+    % TODO: Test this :/
+    if order == 1
         for n = 1:N
             D(:, n) = transpose(DiffMethod(transpose(I(:, n))));
         end
-        I = zeros(size(I));
-        I(:,:) = D(:,:);
+    elseif order == 2
+        for n = 1:N
+            forw = ForwardDiff(transpose(I(:, n)));
+            D(:, n) = transpose(BackwardDiff(forw));
+        end
+    else
+        error('Not implemented. Only 1st and 2nd order derivatives.');
     end
     return
 elseif strcmp(derivative, 'sum')

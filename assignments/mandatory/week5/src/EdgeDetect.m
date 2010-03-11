@@ -6,8 +6,8 @@ D2x = ImDerivative(S, 'dx', 'f', 2);
 vals = zeros(size(locs));
 
 for j = 1:length(locs)
-    %if sign(D2x(locs(j))) == -1 && Dx(locs(j)) >= thresshold
-    if Dx(locs(j)) >= thresshold
+    if sign(D2x(locs(j))) == -1 && Dx(locs(j)) >= thresshold
+    %if Dx(locs(j)) >= thresshold
         vals(j) = S(locs(j));
     end
 end

@@ -1,4 +1,5 @@
 function G = ExpandImage(I, n)
+% TODO: Integrate the function ExpandSignal.m
 % Continues edge pixel to the specified size
 G = AddBorder(I, n);
 
