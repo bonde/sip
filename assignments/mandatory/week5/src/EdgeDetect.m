@@ -1,17 +1,22 @@
-function [vals locs] = EdgeDetect(S, thresshold)
+function [vals locs] = EdgeDetect(S, threshold)
 
-Dx = ImDerivative(S, 'dx', 'f', 1);
-D2x = ImDerivative(S, 'dx', 'f', 2);
-[C locs] = ZeroCrossings(D2x);
+% Get first and second derivative
+Dx = ImDerivative(S, 'dx', 'b', 1);
+Dx2 = ImDerivative(S, 'dx', 'f', 2);
+
+% Get zero crossings in second derivative
+[C locs] = ZeroCrossings(Dx2);
 vals = zeros(size(locs));
 
+% Only chose values above a threshold
 for j = 1:length(locs)
-    if sign(D2x(locs(j))) == -1 && Dx(locs(j)) >= thresshold
-    %if Dx(locs(j)) >= thresshold
+    if Dx(locs(j)) >= threshold
         vals(j) = S(locs(j));
     end
 end
 
+% Remove zero values in array
+% This leaves only the edge(s) of interest
 [vals locs] = PruneZeroes(vals, locs);
 
 end

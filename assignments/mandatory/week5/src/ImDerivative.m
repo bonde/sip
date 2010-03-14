@@ -68,7 +68,6 @@ if strcmp(derivative, 'dx')
     end
     return
 elseif strcmp(derivative, 'dy')
-    % TODO: Test this :/
     if order == 1
         for n = 1:N
             D(:, n) = transpose(DiffMethod(transpose(I(:, n))));

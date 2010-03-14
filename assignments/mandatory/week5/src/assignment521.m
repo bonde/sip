@@ -1,11 +1,4 @@
-function week5 ( ~ )
-
-    function S = GenerateSignal( ~ )
-        N = 64;
-        S = [zeros(1,20),ones(1,3),zeros(1,2),ones(1,5)];
-        S = [S,zeros(1,N-length(S))] + 0.1*randn(1,N);
-        S = cumsum(S);
-    end
+function assignment521 ( ~ )
 
 close all;
 
@@ -17,30 +10,36 @@ close all;
 %[g1 cmap] = imread('../../../../images/square.tiff');
 %g1 = imread('../../../../images/unix.tiff');
 
-S = GenerateSignal();
+S = SignalWeek5();
+
 padding = 1000;
 GS = ExpandSignal(S, padding);
 GS = Gauss(GS, 5/4);
-GS = GS(:, padding+1:N+padding);
 N = length(S);
+
+Dx = ImDerivative(GS, 'dx','b', 1);
+Dx = Dx(:, padding+1:N+padding);
+Dx2 = ImDerivative(GS, 'dx','f', 2);
+Dx2 = Dx2(:, padding+1:N+padding);
+[C locs] = ZeroCrossings(Dx2);
 
 hold on;
 figure(1);
 plot([1:N] - N, zeros([1, N]), 'color', [0.6 0.6 0.6]);
-Dx = ImDerivative(GS, 'dx','f',1);
 plot([1:N]-N, Dx, 'g');
-D2x = ImDerivative(Dx, 'dx','f',1);
-[C locs] = ZeroCrossings(D2x);
-plot([1:N] - N, D2x,'m');
+plot([1:N] - N, Dx2, 'm');
 plot(locs - N, zeros(size(locs)), 'xr');
 ylim([-1 1]);
 hold off;
 
+GS = GS(:, padding+1:N+padding);
+[vals locs] = EdgeDetect(GS, 0.8);
+
 figure(2);
 plot([1:N]-N, S, 'color', [1 0.4 0.7]);
+%plot([1:N]-N, S);
 hold on;
 plot([1:N]-N, GS);
-[vals locs] = EdgeDetect(GS, 0.75);
 plot(locs-N, vals, 'or');
 xlabel('Depth in meters')
 ylabel('Temperature in Degree Celsius')
