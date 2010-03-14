@@ -1,4 +1,4 @@
-function G = AdaptiveFilter(S, factor)
+function G = AdaptiveFilter(S, factor, limit)
 
 epsilon = 0.00000001;
 padding = 10;
@@ -19,15 +19,20 @@ for n = 1:length(S)
     % Avoid division by zero
     val = max(abs(Dx2(n)), epsilon);
 
-    % Find sigma
-    sigma = 1/val*factor;
+    % Decide if we should really blur this
+    if val < limit
+        % Find sigma
+        sigma = 1/val*factor;
 
-    % Convolve with original (padded) signal
-    h = fspecial('gaussian', [1 7], sigma);
-    tmp = conv(S, h, 'same');
+        % Convolve with original (padded) signal
+        h = fspecial('gaussian', [1 7], sigma);
+        tmp = conv(S, h, 'same');
 
-    % Place value of interest in target array
-    G(n) = tmp(n);
+        % Place value of interest in target array
+        G(n) = tmp(n);
+    else
+        G(n) = S(n);
+    end
 end
 
 % Remove the padding

@@ -94,7 +94,14 @@ is clear how the SNR is improved. When we remove the unwanted
 frequencies the value of $\mu$ is decreased, thus the SNR is improved.
 
 \subsection*{Question 5.2}
-\paragraph{1}
+The source code for the main methods used in this section are included
+in the appendix. The methods \texttt{EdgeDetect} and
+\texttt{AdaptiveFilter} calls the method \texttt{ImDerivative} which is
+a wrapper utilizing the methods \texttt{BackwardDiff},
+\texttt{ForwardDiff} and \texttt{SymmetricDiff} to find the derivatives
+of a signal.
+
+\paragraph{1)}
 
 \begin{figure}[!h]
     \centering
@@ -164,9 +171,7 @@ locating the global maximum of the second derivative. The opposite is
 not true, i.e. we can not find the end point of the gradient by finding
 the global minimum.
 
-The main methods for finding the border are included in the appendix.
-
-\paragraph{2}
+\paragraph{2)}
 We now want to apply adaptive filtering to the signal. This allows us to
 use a variable filter size for filtering certain areas with a broader
 filter. Specifically we want to filter coarsely at near-constant
@@ -175,9 +180,9 @@ segments, while large changes are kept intact.
 Again we use the second derivative as it gives an indication of how the
 original signal changes. Reviewing Fig. \ref{derivatives} we see that at
 the locations just before and after the large gradient, the second
-derivative has relatively small values. Thus, when the second derivative
-is small we want to use a larger filter. When the values are big, we
-want a smaller filter.
+derivative has relatively small values. Thus, when the absolute value of
+the second derivative is small, we want to use a larger filter. When the
+values are big, we want a smaller filter.
 
 Smoothing is now done in the spatial domain using a $1 \times 7$
 Gaussian kernel. $\sigma$ is set by the reciprocal value of the second
@@ -186,10 +191,54 @@ derivative and adjusted by a factor $f$ as shown in eq. \eqref{sigma_val}.
     \sigma(x) = \frac{1}{|S''(x)|}f
     \label{sigma_val}
 \end{equation}
+The second derivative is sensitive to noise, thus we use the second
+derivative from a smoothed signal when calculating the values for
+$\sigma$.
+
 The actual implementation is included in the appendix as the method
 \texttt{AdaptiveFilter()}. The implementation is naive and extremely
 inefficient. For each value in the final signal we convolve the entire
-original signal with a new $\sigma$-value.
+original signal with a new $\sigma$-value. The resulting signal is shown
+in Fig. \ref{adaptive_blur}.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[angle=0,width=0.7\textwidth]{images/adaptive_blur}
+    \caption[]{Blue: Adaptive filtering of signal with $f = 0.2$. Light
+    red: Original.  Each point in the original signal have been filtered
+    with a Gaussian kernel with a value for $\sigma$ calculated from the
+    second derivative. Notice that from -70 to -45 the signal is
+    smoothed like that in \textbf{fig.  \ref{blur_signal}}. At -45 we
+    have a sharp edge but on the slope the irregularity is almost gone.
+    At the top of the slope we have a sharp edge again. At these points
+    of interest the values are almost the same as in the original.}
+    \label{adaptive_blur}
+\end{figure}
+
+The signal in Fig. \ref{adaptive_blur} shows that we preserve some
+detail, but these are not entirely accurate. In my implementation you
+are therefore allowed to pass a limit parameter. Using this one can
+define that at location with a second order derivative values above this
+limit no smoothing will be applied. An example of this is shown on the
+signal in Fig. \ref{adaptive_blur_lim}.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[angle=0,width=0.7\textwidth]{images/adaptive_blur_lim}
+    \caption[]{Adaptive blur with a limit on the second derivative of
+    0.27 and $f = 0.2$. Only locations with a second derivative value
+    less than 0.27 are smoothed. Otherwise they are left as the original
+    signal. At the top of the slope the values are the same as the
+    original. Decreasing the limit reintroduce the irregularity on the
+    slope.}
+    \label{adaptive_blur_lim}
+\end{figure}
+
+Given a reasonable amount of time, one could probably tweak the
+resulting signal by experimenting with different sizes for the Gaussian
+kernel. Also, the general efficiency of the adaptive filtering could be
+improved by convolving with smaller pieces of the original signal rather
+than filtering the entire signal in every iteration.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Formal stuff
