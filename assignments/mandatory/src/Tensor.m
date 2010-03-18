@@ -1,8 +1,5 @@
 function [u v] = Tensor(I, scale, sigma1, sigma2)
 
-% Use external package from http://staff.science.uva.nl/~rein/nldiffusionweb/material.html
-addpath('../diffusion/');
-
 % Find the derivatives on the scale defined by sigma1
 Dxx = gD(I, sigma1, 2, 0);
 Dyy = gD(I, sigma1, 0, 2);
