@@ -1,0 +1,64 @@
+\ProvidesPackage{bonde}
+
+\usepackage{a4wide}
+
+\usepackage{charter}
+\usepackage{verbatim}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+%\usepackage[integrals]{wasysym}
+%\usepackage{mathrsfs}
+%\usepackage[mathcal]{euscript}
+\usepackage{trfsigns}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage[small,bf]{caption}
+%\usepackage{xypic}
+\usepackage[table]{xcolor}
+\usepackage{subfig}
+%\usepackage{ulem} %use \normalem after begin document
+\usepackage[authoryear]{natbib}
+
+% Settings
+\parindent=5pt
+\parskip=8pt plus 2pt minus 4pt
+\lstset{language=Matlab, basicstyle=\scriptsize,
+    showstringspaces=false, numbers=left, stepnumber=1, numberstyle=\tiny, frame=tb}
+
+% Commands
+\newcommand{\mailto}[1]{\href{mailto:#1}{#1}}
+\def\mathbi#1{\textbf{\em #1}}
+
+% New definition of square root:
+% it renames \sqrt as \oldsqrt
+\let\oldsqrt\sqrt
+% it defines the new \sqrt in terms of the old one
+\def\sqrt{\mathpalette\DHLhksqrt}
+\def\DHLhksqrt#1#2{%
+\setbox0=\hbox{$#1\oldsqrt{#2\,}$}\dimen0=\ht0
+\advance\dimen0-0.2\ht0
+\setbox2=\hbox{\vrule height\ht0 depth -\dimen0}%
+{\box0\lower0.4pt\box2}}
+
+% Provide \subtitle
+\makeatletter
+\def\s@btitle{\relax}
+\def\subtitle#1{\gdef\s@btitle{#1}}
+\def\@maketitle{%
+\newpage
+\null
+%\vskip -6em%
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} lr}
+    {\large \textbf \@title } & {\small \@date}\vspace{0.5em}\\
+    \if\s@btitle\relax\else\typeout{[subtitle]}%
+    \hspace{0.15em}{\s@btitle}%
+    \fi & {\small Department of Computer Science}\\
+    {\small \emph{\hspace{0.15em}by \@author}} & {\small University of Copenhagen}
+\end{tabular*}\par\hrule
+\vskip 1.5em}
+\makeatother

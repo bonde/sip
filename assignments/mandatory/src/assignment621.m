@@ -5,24 +5,23 @@ addpath('../diffusion/');
 
 close all;
 
-sigma1 = 4;
-sigma2 = 4;
-step = 4;
+scale1 = 4;
+scale2 = 4;
+gridn = 4;
 
 [I cmap] = imread('../../../images/FINGERPRINT.jpg');
 %I = imread('../../../images/lenna.tiff');
+%I = imread('../../../images/square.tiff');
 
 I = double(I);
-[u v] = Tensor(I, step, sigma1, sigma2);
+[u v Cc] = StructureTensor(I, scale1, scale2, gridn);
 
-[p q] = GradientVector(I, step, sigma1);
+[p q] = GradientVector(I, scale1, gridn);
 
-I = gD(I, sigma1, 0, 0);
+I = gD(I, scale1, 0, 0);
 
-% Guess we have to scale or something
-[x y] = meshgrid(linspace(1, size(I,1), size(I,1)/step));
+[x y] = meshgrid(linspace(1, size(I,1), size(I,1)/gridn));
 
-% Interpolate (why I really don't know)
 u = interp2(u, x, y);
 v = interp2(v, x, y);
 
@@ -35,9 +34,11 @@ hold on;
 contour(I, [100 100], 'r');
 
 % Note that u and v are swapped (and p and q for that matter)
-quiver(x-.5*v, y-.5*u, v, u);
+quiver(x-.5*u, y-.5*v, u, v);
 
-quiver(x-.5*q, y-.5*p, q, p, 'g');
+quiver(x-.5*p, y-.5*q, p, q, 'g');
 hold off;
+
+%figure, imshow(Cc, []);
 
 end
