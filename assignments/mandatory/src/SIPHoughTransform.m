@@ -10,18 +10,18 @@ ntheta = 180/thetares;
 
 % Taken from MATLAB docs about the Hough transform
 D = sqrt((M - 1)^2 + (N - 1)^2);
-diagonal = rhores*ceil(D/rhores);
+diagonal = ceil(D/rhores);
 nrho = 2*(ceil(D)/rhores) + 1
 
 % Range of rho
-rhorange = -diagonal: rhores : diagonal - rhores;
+rhorange = -diagonal: rhores : diagonal;
 
 % Construct the Hough accumulator
 H = zeros([nrho ntheta]);
 
 % Initialize theta (in radians)
 step = pi/ntheta;
-theta = -pi/2 : step : pi/2-step;
+theta = -pi/2 : step : pi/2 - step;
 
 % For each pixel on an edge calculate rho (d) for every angle in theta
 % and save the result in the Hough accumulator.
@@ -29,9 +29,9 @@ for m = 1:M
     for n = 1:N
         if E(m,n)
             for t = 1:ntheta
-                rho = round(n*cos(theta(t)) + m*sin(theta(t)));
+                rho = round(n*cos(theta(t)) + m*sin(theta(t)) );
+                rho = round(rho*rhores);
                 rho = rho + diagonal;
-                %rho = ceil(rho/rhores);
                 H(rho, t) = H(rho, t) + 1;
             end
         end
