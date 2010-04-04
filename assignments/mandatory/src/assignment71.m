@@ -42,6 +42,7 @@ t = min(th)
 t = max(th)
 
 %[u v] = StructureTensor(I, scale1, scale2, gridn, 0);
+[u v] = AltTensor(I, scale1, scale2, 1, 0);
 %[H T R] = SIPHoughTransform(E);
 [H T R] = SIPFastHoughTransform(I, E, scale1, scale2);
 
@@ -59,7 +60,7 @@ v = interp2(v, x, y);
 
 %P  = houghpeaks(H, 8, 'threshold', ceil(0.3*max(H(:))));
 
-P  = houghpeaks(H, 50, 'threshold', ceil(0.2*max(H(:))));
+P  = houghpeaks(H, 20, 'threshold', ceil(0.2*max(H(:))));
 %P  = houghpeaks(H, 12);
 %P  = houghpeaks(H, 23, 'threshold', 12);
 
@@ -100,9 +101,12 @@ end
 % highlight the longest line segment
 %plot(xy_long(:,1),xy_long(:,2), 'LineWidth', 2, 'Color', 'green');
 %contour(I, [100 100], 'r');
+hold off;
 
+figure, imshow(I, []);
+hold on;
 % Note that u and v are swapped (and p and q for that matter)
-%quiver(x-.5*u, y-.5*v, u, v, 0, '.b');
+quiver(x-.5*u, y-.5*v, u, v, 0, '.b');
 
 %quiver(x-.5*p, y-.5*q, p, q, 'g');
 hold off;
@@ -114,8 +118,12 @@ H = ToIm(H);
 %imwrite(ToIm(E), '../week7/images/square_edges.png', 'png');
 %imwrite(H, '../week7/images/square_transform.png', 'png');
 
-%imwrite(I, '../week7/images/apple.png', 'png');
 %imwrite(ToIm(E), '../week7/images/apple_edges.png', 'png');
 %imwrite(H, '../week7/images/apple_transform.png', 'png');
+
+%imwrite(ToIm(E), '../week7/images/f_apple_edges.png', 'png');
+%imwrite(H, '../week7/images/f_apple_transform.png', 'png');
+
+%imwrite(H, '../week7/images/f_R1_transform.png', 'png');
 
 end

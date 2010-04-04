@@ -31,7 +31,7 @@ rdiagonal = rhores*(ceil(D)/rhores);
 nrho = 2*(ceil(D)/rhores) + 1;
 rhorange = -rdiagonal: rhores : rdiagonal;
 
-%[u v] = StructureTensor(I, scale1, scale2, 1, 0);
+% Structure tensor from Jon
 [u v] = AltTensor(I, scale1, scale2, 1, 0);
 
 H = zeros([nrho ntheta]);
@@ -46,7 +46,7 @@ for m = 1:M
             theta = atan2(V, U);
 
             % Calculate rho
-            rho = ceil(n*cos(theta) + m*sin(theta)) + rdiagonal;
+            rho = round(n*cos(theta) + m*sin(theta)) + rdiagonal;
 
             % Convert theta and lookup the index (slow) :/
             theta = rad2deg(theta);
