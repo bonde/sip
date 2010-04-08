@@ -9,10 +9,10 @@ function Inv = InverseFilter(I, s, epsilon, threshold)
 dr = 0;
 dc = dr;
 
-
-% Compute the gaussian with specified sigma
+% First transform the input image
 F = fft2(I);
 
+% Compute the gaussian with specified sigma
 if (s < 0)
   error('s must be larger than or equal 0');
 else 
@@ -64,7 +64,8 @@ else
 	  end
 	end
 
-	%F = I.*G.*DG;
+    % Start hacking
+    % Should we use a threshold or not...
     if threshold
         [M N] = size(I);
         for m = 1:M
